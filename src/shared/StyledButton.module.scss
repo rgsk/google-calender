@@ -1,0 +1,11 @@
+.button {
+  padding: 0.5rem 1rem;
+  color: white;
+  background-color: var(--color-blue);
+  border-radius: 3px;
+  width: min-content;
+  &:hover {
+    cursor: pointer;
+    filter: brightness(1.2);
+  }
+}

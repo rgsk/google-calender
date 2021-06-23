@@ -1,0 +1,12 @@
+.container {
+  .grid {
+    display: grid;
+    background-color: black;
+    gap: 1px;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(24, 100px);
+    p {
+      background-color: wheat;
+    }
+  }
+}

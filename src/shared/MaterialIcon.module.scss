@@ -1,0 +1,17 @@
+.icon {
+  color: rgb(82, 82, 82);
+  cursor: pointer;
+  border-radius: 50%;
+  // border: 1px solid red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  &:hover {
+    background-color: rgba(202, 202, 202, 0.2);
+  }
+  span {
+    // border: 1px solid green;
+    // max-width: 1rem;
+  }
+}

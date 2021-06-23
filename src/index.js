@@ -1,17 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'material-icons/iconfont/material-icons.css';
+import 'react-datepicker/dist/react-datepicker.css';
+import '../node_modules/react-grid-layout/css/styles.css';
+
 import './index.scss';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { RecoilRoot } from 'recoil';
+import RecoilizeDebugger from 'recoilize-fixed';
+
+const app = document.getElementById('root');
 
 ReactDOM.render(
-  <React.StrictMode>
+  <RecoilRoot>
+    <RecoilizeDebugger root={app} />
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </RecoilRoot>,
+  app
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
