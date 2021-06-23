@@ -3,6 +3,7 @@ import styles from './App.module.scss';
 function App() {
   useEffect(() => {
     (async () => {
+      console.log(process.env.REACT_APP_SERVER_URL);
       const response = await fetch(process.env.REACT_APP_SERVER_URL);
       const data = await response.json();
       console.log(data);
