@@ -2,19 +2,20 @@ const getWeeks = (year) => {
   const arr = [];
   let currentWeek = [];
   const jan1 = new Date(year, 0, 1);
+
   const day = jan1.getDay();
   // console.log(jan1.getDay());
   if (day > 0) {
     const start = 31 - day + 1;
     for (let i = start; i <= 31; i++) {
-      currentWeek.push(new Date(year - 1, 11, i).toLocaleDateString());
+      currentWeek.push(new Date(year - 1, 11, i));
     }
   }
   const daysMonthWise = getNumDaysMonthWise(year);
   for (let i = 0; i < 12; i++) {
     const daysInMonth = daysMonthWise[i];
     for (let j = 1; j <= daysInMonth; j++) {
-      currentWeek.push(new Date(year, i, j).toLocaleDateString());
+      currentWeek.push(new Date(year, i, j));
       if (currentWeek.length === 7) {
         arr.push([...currentWeek]);
         currentWeek = [];
@@ -24,7 +25,7 @@ const getWeeks = (year) => {
   if (currentWeek.length !== 0) {
     let j = 1;
     while (currentWeek.length < 7) {
-      currentWeek.push(new Date(year + 1, 0, j).toLocaleDateString());
+      currentWeek.push(new Date(year + 1, 0, j));
       j++;
     }
     arr.push(currentWeek);
@@ -54,4 +55,32 @@ const getNumDaysMonthWise = (year) => {
     31,
   ];
 };
-console.log(getWeeks(2024));
+const weeks = getWeeks(2021);
+function getWeekIndexFromDate(weeks, date) {
+  let len = weeks[0].length;
+  let i = 0;
+
+  while (date.getMonth() > weeks[i][len - 1].getMonth()) {
+    i++;
+  }
+  while (date.getDate() > weeks[i][len - 1].getDate()) {
+    i++;
+  }
+  return i;
+}
+let wfidx = getWeekIndexFromDate(weeks, new Date());
+console.log(wfidx);
+console.log(weeks[wfidx]);
+function getAssociatedMonthsAndYearForGivenWeek(week) {
+  const arr = [];
+  let currentMonth = -1;
+  for (let date of week) {
+    let month = date.getMonth();
+    if (month !== currentMonth) {
+      arr.push([month, date.getFullYear()]);
+      currentMonth = month;
+    }
+  }
+  return arr;
+}
+console.log(getAssociatedMonthsAndYearForGivenWeek(weeks[5]));

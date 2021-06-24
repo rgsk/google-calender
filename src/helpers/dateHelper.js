@@ -54,3 +54,27 @@ export const getNumDaysMonthWise = (year) => {
     31,
   ];
 };
+export function getWeekIndexFromDate(weeks, date) {
+  let len = weeks[0].length;
+  let i = 0;
+
+  while (date.getMonth() > weeks[i][len - 1].getMonth()) {
+    i++;
+  }
+  while (date.getDate() > weeks[i][len - 1].getDate()) {
+    i++;
+  }
+  return i;
+}
+export function getAssociatedMonthsAndYearForGivenWeek(week) {
+  const arr = [];
+  let currentMonth = -1;
+  for (let date of week) {
+    let month = date.getMonth();
+    if (month !== currentMonth) {
+      arr.push([month, date.getFullYear()]);
+      currentMonth = month;
+    }
+  }
+  return arr;
+}

@@ -73,22 +73,32 @@ function Home() {
         />
       ) : (
         <div className={styles.gridContainer}>
-          <div className={styles.rowNames}>
-            {range(0, dimension.rows).map((v) => (
-              <p
-                key={v}
-                style={{
-                  height: dimension.rowLength + 'px',
-                }}
-              >
-                {v}
-              </p>
-            ))}
-          </div>
+          {layoutType !== layoutTypes.month && (
+            <div className={styles.rowNames}>
+              {range(0, dimension.rows).map((v) => (
+                <p
+                  key={v}
+                  style={{
+                    height: dimension.rowLength + v / 25 + 'px',
+                  }}
+                >
+                  {v}
+                </p>
+              ))}
+            </div>
+          )}
+
           <div className={styles.columnGrid}>
-            <div className={styles.columnNames}>
+            <div
+              className={styles.columnNames}
+              style={{
+                gridTemplateColumns: `repeat(${dimension.cols}, 1fr)`,
+              }}
+            >
               {range(0, dimension.cols).map((v) => (
-                <p key={v}>{week[v]}</p>
+                <p key={v} className={styles.column}>
+                  {week[v]}
+                </p>
               ))}
             </div>
             <div
@@ -99,6 +109,16 @@ function Home() {
                 }px`,
               }}
             >
+              <div
+                className={styles.mask}
+                style={{
+                  gridTemplateColumns: `repeat(${dimension.cols}, 1fr)`,
+                }}
+              >
+                {range(0, dimension.rows * dimension.cols).map((v) => (
+                  <div key={`${v}`} className={styles.tab}></div>
+                ))}
+              </div>
               <GridLayout
                 className={['layout', styles.grid].join(' ')}
                 layout={layout}
