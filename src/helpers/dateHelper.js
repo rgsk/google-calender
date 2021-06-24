@@ -1,4 +1,5 @@
 export const getWeeks = (year) => {
+  // console.log('get weeks ran');
   const arr = [];
   let currentWeek = [];
   const jan1 = new Date(year, 0, 1);
@@ -78,3 +79,12 @@ export function getAssociatedMonthsAndYearForGivenWeek(week) {
   }
   return arr;
 }
+export const getTime12Hour = (time24Hour) => {
+  if (time24Hour <= 11) {
+    return time24Hour + ' AM';
+  } else if (time24Hour === 12) {
+    return time24Hour + ' PM';
+  } else {
+    return time24Hour - 12 + ' PM';
+  }
+};

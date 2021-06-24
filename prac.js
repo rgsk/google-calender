@@ -84,3 +84,15 @@ function getAssociatedMonthsAndYearForGivenWeek(week) {
   return arr;
 }
 console.log(getAssociatedMonthsAndYearForGivenWeek(weeks[5]));
+for (let j = 2012; j < 2100; j++) {
+  console.log(getWeeks(j).length);
+}
+const getTime12Hour = (time24Hour) => {
+  if (time24Hour <= 11) {
+    return time24Hour + ' AM';
+  } else if (time24Hour === 12) {
+    return time24Hour + ' PM';
+  } else {
+    return time24Hour - 12 + ' PM';
+  }
+};

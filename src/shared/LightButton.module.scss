@@ -1,0 +1,12 @@
+.lightButton {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid rgba(153, 153, 153, 0.637);
+  border-radius: 3px;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--color-light-gray-hover);
+  }
+}

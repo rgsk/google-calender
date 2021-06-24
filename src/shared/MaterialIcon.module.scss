@@ -1,5 +1,6 @@
 .icon {
-  color: rgb(82, 82, 82);
+  user-select: none;
+  color: var(--color-light-gray-text);
   cursor: pointer;
   border-radius: 50%;
   // border: 1px solid red;
@@ -8,7 +9,7 @@
   justify-content: center;
   padding: 5px;
   &:hover {
-    background-color: rgba(202, 202, 202, 0.2);
+    background-color: var(--color-light-gray-hover);
   }
   span {
     // border: 1px solid green;

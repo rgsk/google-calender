@@ -13,7 +13,12 @@ button {
   font-family: inherit;
 }
 :root {
+  --measure-navbar-height: 65px;
   --color-blue: #196ddc;
+  --color-light-gray-text: rgb(82, 82, 82);
+  --color-light-gray-hover: rgb(235, 235, 235);
+  --decor-box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 .react-time-input-picker-wrapper {
   border: none !important;

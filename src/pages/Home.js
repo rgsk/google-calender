@@ -6,10 +6,9 @@ import ScheduleCard from '../components/ScheduleCard';
 import styles from './Home.module.scss';
 import { useGridState } from '../state/gridState';
 import Calendar from 'rc-year-calendar';
-import { getWeeks } from '../helpers/dateHelper';
 import { useDateState } from '../state/dateState';
-const week = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-const weeks = getWeeks(2021);
+import { dayNames } from '../helpers/names';
+import { getTime12Hour } from '../helpers/dateHelper';
 function Home() {
   const {
     layout,
@@ -19,7 +18,8 @@ function Home() {
     setLayoutType,
     dimension,
   } = useGridState();
-  const { currentWeek, prevWeek, nextWeek, currentYear } = useDateState();
+  const { currentWeek, prevWeek, nextWeek, currentYear, weeks } =
+    useDateState();
   const [showScheduleCard, setShowScheduleCard] = useState(false);
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
@@ -49,14 +49,17 @@ function Home() {
 
   return (
     <div className={styles.home}>
-      <p onClick={() => setShowScheduleCard(true)}>Home</p>
-      <p onClick={() => setLayoutType(layoutTypes['day'])}>day</p>
-      <p onClick={() => setLayoutType(layoutTypes['year'])}>year</p>
-      <p onClick={() => setLayoutType(layoutTypes['week'])}>week</p>
-      <p onClick={() => setLayoutType(layoutTypes['month'])}>month</p>
-      <p onClick={() => setLayoutType(layoutTypes['4 days'])}>4 days</p>
-      <p onClick={prevWeek}>prev week</p>
-      <p onClick={nextWeek}>next week</p>
+      <div className={styles.create} onClick={() => setShowScheduleCard(true)}>
+        <svg width="36" height="36" viewBox="0 0 36 36">
+          <path fill="#34A853" d="M16 16v14h4V20z"></path>
+          <path fill="#4285F4" d="M30 16H20l-4 4h14z"></path>
+          <path fill="#FBBC05" d="M6 16v4h10l4-4z"></path>
+          <path fill="#EA4335" d="M20 16V6h-4v14z"></path>
+          <path fill="none" d="M0 0h36v36H0z"></path>
+        </svg>
+        Create
+      </div>
+
       {showScheduleCard && (
         <ScheduleCard
           close={() => setShowScheduleCard(false)}
@@ -79,10 +82,10 @@ function Home() {
                 <p
                   key={v}
                   style={{
-                    height: dimension.rowLength + v / 25 + 'px',
+                    height: dimension.rowLength + v / 30 + 'px',
                   }}
                 >
-                  {v}
+                  {v === 0 ? 'GMT+05:30' : getTime12Hour(v)}
                 </p>
               ))}
             </div>
@@ -97,7 +100,8 @@ function Home() {
             >
               {range(0, dimension.cols).map((v) => (
                 <p key={v} className={styles.column}>
-                  {week[v]}
+                  <span>{dayNames[v].slice(0, 3)}</span>
+                  <span>{weeks[currentWeek][v].getDate()}</span>
                 </p>
               ))}
             </div>
