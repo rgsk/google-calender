@@ -11,7 +11,6 @@ export const layoutTypes = {
   week: 'week',
   month: 'month',
   year: 'year',
-  schedule: 'schedule',
   '4 days': '4 days',
 };
 
@@ -77,8 +76,32 @@ export const useGridState = () => {
     nextMonth,
     prevYear,
     nextYear,
+    setCurrentYear,
   } = useDateState();
+  const switchToCurrentDate = () => {
+    const today = new Date();
+    setCurrentYear(today.getFullYear());
+    setMonths(getMonths(today.getFullYear()));
+    setCurrentMonth(today.getMonth());
+    const common = (cols) => {
+      const updatedWeeks = getWeeks(today.getFullYear(), cols);
+      setWeeks(updatedWeeks);
+      setCurrentWeek(getWeekIndexFromDate(updatedWeeks, today));
+    };
+    switch (layoutType) {
+      case layoutTypes.week:
+        common(7);
+        break;
+      case layoutTypes['4 days']:
+        common(4);
+        break;
+      case layoutTypes.day:
+        common(1);
+        break;
 
+      default:
+    }
+  };
   useEffect(() => {
     let updatedWeeks;
     switch (layoutType) {
@@ -119,13 +142,7 @@ export const useGridState = () => {
         setMonths(updatedMonths);
 
         break;
-      case layoutTypes['schedule']:
-        setDimension((prevDimension) => ({
-          ...prevDimension,
-          rows: 24,
-          cols: 7,
-        }));
-        break;
+
       case layoutTypes['4 days']:
         updatedWeeks = getWeeks(currentYear, 4);
         setCurrentWeek(
@@ -145,25 +162,27 @@ export const useGridState = () => {
     }
   }, [layoutType]);
   useEffect(() => {
-    if (months[currentMonth].length === 35) {
-      setLayout(createLayout(5, 7));
+    if (layoutType === layoutTypes['month']) {
+      if (months[currentMonth].length === 35) {
+        setLayout(createLayout(5, 7));
 
-      setDimension({
-        rows: 5,
-        cols: 7,
-        rowLength: 100,
-      });
-    } else {
-      // length 42
-      setLayout(createLayout(6, 7));
+        setDimension({
+          rows: 5,
+          cols: 7,
+          rowLength: 100,
+        });
+      } else {
+        // length 42
+        setLayout(createLayout(6, 7));
 
-      setDimension({
-        rows: 6,
-        cols: 7,
-        rowLength: 100,
-      });
+        setDimension({
+          rows: 6,
+          cols: 7,
+          rowLength: 100,
+        });
+      }
     }
-  }, [currentMonth, currentYear, months]);
+  }, [currentMonth, currentYear, layoutType, months, setDimension, setLayout]);
   const prevPage = () => {
     if (layoutType === layoutTypes.month) {
       prevMonth();
@@ -198,5 +217,6 @@ export const useGridState = () => {
     setDimension,
     prevPage,
     nextPage,
+    switchToCurrentDate,
   };
 };

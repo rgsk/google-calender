@@ -1,4 +1,21 @@
 import { dayNames, monthNames } from './names';
+export const getDuration = (startTime, endTime) => {
+  const start = startTime.split(':');
+  const end = endTime.split(':');
+  const hours = end[0] - start[0];
+  const minutes = end[1] - start[1];
+  return hours * 60 * 60 + minutes * 60;
+};
+export const addDuration = (startTime, seconds) => {
+  return new Date(startTime.getTime() + seconds * 1000);
+};
+export const getDateTimeForServer = (dateObj) => {
+  const justDate = `${dateObj.getFullYear()}-${
+    dateObj.getMonth() + 1
+  }-${dateObj.getDate()}`;
+  const justTime = `${dateObj.getHours()}:${dateObj.getMinutes()}`;
+  return justDate + ' ' + justTime;
+};
 export const getWeeks = (year, cols = 7) => {
   // console.log('get weeks ran');
   const arr = [];
@@ -173,9 +190,9 @@ export const getMonths = (year) => {
 };
 export const getDayAndDate = (date) => {
   // Sunday, June 20
-  return `${dayNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${String(
-    date.getFullYear()
-  ).slice(2)}`;
+  return `${dayNames[date.getDay()]}, ${
+    monthNames[date.getMonth()]
+  } ${date.getDate()}`;
 };
 export const getTime12HourWithMinutes = (date) => {
   //  2:00pm

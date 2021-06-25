@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
 import {
   getWeeks,
@@ -7,10 +6,10 @@ import {
   getMonths,
 } from '../helpers/dateHelper';
 import { monthNames } from '../helpers/names';
-import { useGridState } from './gridState';
+const curYear = new Date().getFullYear();
 const currentWeekState = atom({
   key: 'currentWeekState',
-  default: getWeekIndexFromDate(getWeeks(2021), new Date()),
+  default: getWeekIndexFromDate(getWeeks(curYear), new Date()),
 });
 const currentMonthState = atom({
   key: 'currentMonthState',
@@ -18,15 +17,15 @@ const currentMonthState = atom({
 });
 const currentYearState = atom({
   key: 'currentYearState',
-  default: 2021,
+  default: curYear,
 });
 const weeksState = atom({
   key: 'weeksState',
-  default: getWeeks(2021, 7),
+  default: getWeeks(curYear, 7),
 });
 const monthsState = atom({
   key: 'monthsState',
-  default: getMonths(2021),
+  default: getMonths(curYear),
 });
 
 export const useDateState = () => {

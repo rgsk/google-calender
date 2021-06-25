@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import TimeInput from 'react-time-picker-input';
 import DatePicker from 'react-datepicker';
-import { getDuration } from '../helpers/utils';
 import styles from './ScheduleCard.module.scss';
 import MaterialIcon from '../shared/MaterialIcon';
 import StyledButton from '../shared/StyledButton';
 import schedulesApi from '../api/schedulesApi';
 import { useInfoState } from '../state/infoState';
 import { useEditState } from '../state/editState';
+import { getDuration } from '../helpers/dateHelper';
+import CommonInputCard from '../shared/CommonInputCard';
 const getTime = (date) => {
   // for timepicker to work properly
   // we need to time string formatted as 12:32
@@ -17,7 +18,7 @@ const getTime = (date) => {
     `${date.getMinutes()}`.padStart(2, 0)
   );
 };
-function Card() {
+function ScheduleCard() {
   const { editStartTime, editEndTime, editedSchedule, setEditing } =
     useEditState();
   const { setLoadedSchedules } = useInfoState();
@@ -105,61 +106,50 @@ function Card() {
     // close();
   };
   return (
-    <div className={styles.card}>
-      <div className={styles.top}>
-        <MaterialIcon type="close" onClick={() => setEditing(false)} />
+    <CommonInputCard save={save}>
+      <div className={styles.title}>
+        <input
+          type="text"
+          placeholder="Add title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </div>
-      <div className={styles.rest}>
-        <div className={styles.mid}>
-          <div className={styles.title}>
-            <input
-              type="text"
-              placeholder="Add title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+      <div className={styles.dateTime}>
+        <div className={styles.date}>
+          <span className="material-icons-outlined">date_range</span>
+
+          <div className={styles.picker}>
+            <DatePicker
+              selected={scheduleDate}
+              dateFormat={'dd/MM/yyyy'}
+              onChange={(date) => setScheduleDate(date)}
             />
           </div>
-          <div className={styles.dateTime}>
-            <div className={styles.date}>
-              <span className="material-icons-outlined">date_range</span>
-
-              <div className={styles.picker}>
-                <DatePicker
-                  selected={scheduleDate}
-                  dateFormat={'dd/MM/yyyy'}
-                  onChange={(date) => setScheduleDate(date)}
-                />
-              </div>
-            </div>
-            <div className={styles.time}>
-              <span className="material-icons-outlined">schedule</span>
-              <div>
-                <TimeInput
-                  hour12Format
-                  value={startTime}
-                  allowDelete
-                  onChange={(dateString) => setStartTime(dateString)}
-                />
-              </div>
-              <div>&#8212;</div>
-              <div>
-                <TimeInput
-                  hour12Format
-                  value={endTime}
-                  allowDelete
-                  onChange={(dateString) => setEndTime(dateString)}
-                />
-              </div>
-            </div>
+        </div>
+        <div className={styles.time}>
+          <span className="material-icons-outlined">schedule</span>
+          <div>
+            <TimeInput
+              hour12Format
+              value={startTime}
+              allowDelete
+              onChange={(dateString) => setStartTime(dateString)}
+            />
+          </div>
+          <div>&#8212;</div>
+          <div>
+            <TimeInput
+              hour12Format
+              value={endTime}
+              allowDelete
+              onChange={(dateString) => setEndTime(dateString)}
+            />
           </div>
         </div>
-
-        <div className={styles.bottom}>
-          <StyledButton onClick={save}>Save</StyledButton>
-        </div>
       </div>
-    </div>
+    </CommonInputCard>
   );
 }
 
-export default Card;
+export default ScheduleCard;

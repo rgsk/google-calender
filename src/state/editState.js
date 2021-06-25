@@ -1,4 +1,5 @@
 import { atom, useRecoilState } from 'recoil';
+import { addDuration } from '../helpers/dateHelper';
 const editingState = atom({
   key: 'editingState',
   default: false,
@@ -9,7 +10,7 @@ const editStartTimeState = atom({
 });
 const editEndTimeState = atom({
   key: 'editEndTimeState',
-  default: new Date(),
+  default: addDuration(new Date(), 60 * 60),
 });
 const editedScheduleState = atom({
   key: 'editedScheduleState',

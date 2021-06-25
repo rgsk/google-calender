@@ -1,0 +1,43 @@
+.card {
+  position: fixed;
+  z-index: 100000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 500px;
+  box-shadow: var(--decor-box-shadow);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  .top {
+    padding: 0.5rem;
+    background-color: #f1f3f4;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .rest {
+    // border: 1px solid blue;
+    background-color: white;
+    flex: 1;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+
+    .mid {
+      flex: 1;
+      input {
+        border: none;
+        outline: none;
+      }
+    }
+    .bottom {
+      // border: 1px solid blue;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}

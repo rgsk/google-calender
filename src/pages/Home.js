@@ -11,7 +11,9 @@ import { dayNames, monthNames } from '../helpers/names';
 import { useInfoState } from '../state/infoState';
 
 import {
+  addDuration,
   constructDateForKeysWithISOFormat,
+  getDateTimeForServer,
   getTime12Hour,
 } from '../helpers/dateHelper';
 import Description from './Description';
@@ -72,7 +74,7 @@ function Home() {
           <path fill="#EA4335" d="M20 16V6h-4v14z"></path>
           <path fill="none" d="M0 0h36v36H0z"></path>
         </svg>
-        Create
+        <span>Create</span>
       </div>
 
       {editing && <ScheduleCard />}
@@ -145,6 +147,7 @@ function Home() {
       loadedSchedules.forEach((schedule) => {
         if (
           schedule.start_time &&
+          date &&
           schedule.start_time.getFullYear() === date.getFullYear() &&
           schedule.start_time.getMonth() === date.getMonth() &&
           schedule.start_time.getDate() === date.getDate()
@@ -163,7 +166,12 @@ function Home() {
       return date.getDate();
     };
     return (
-      <div className={styles.gridContainer}>
+      <div
+        className={styles.gridContainer}
+        style={{
+          marginTop: '2rem',
+        }}
+      >
         <div
           className={styles.columnGrid}
           style={{
@@ -252,7 +260,13 @@ function Home() {
     );
   }
   function WeekLayout() {
-    const getSchedules = (rs, cs, re, ce, idx) => {
+    const [curI, setCurI] = useState();
+    const getSchedules = (block, idx = -1) => {
+      // rs, cs, re, ce
+      const rs = block.y;
+      const cs = block.x;
+      const re = block.y + block.h;
+      const ce = block.x + block.w;
       // console.log(currentWeekSchedules);
       const date = weeks[currentWeek][cs];
       if (!date) return;
@@ -273,44 +287,100 @@ function Home() {
         ) {
           // console.log(schedule);
           schedules.push(schedule);
-          const h =
-            schedule.end_time.getHours() - schedule.start_time.getHours();
-          if (layout[idx].h < h) {
-            setLayout((prevLayout) => {
-              const updatedBlock = { ...prevLayout[idx], h };
-              return prevLayout.map((v, i) => (i === idx ? updatedBlock : v));
-            });
+          if (idx !== -1) {
+            let h =
+              schedule.end_time.getHours() - schedule.start_time.getHours();
+
+            if (schedule.end_time.getMinutes() > 0) {
+              h++;
+            }
+            if (layout[idx].h < h) {
+              setLayout((prevLayout) => {
+                const updatedBlock = { ...prevLayout[idx], h };
+                return prevLayout.map((v, i) => (i === idx ? updatedBlock : v));
+              });
+            }
           }
         }
       });
       return schedules;
     };
-    const itemClickListener = (rs, cs, re, ce) => {
+    const getStartAndEndTimeAccToPositionOfBlock = (block) => {
+      const rs = block.y;
+      const cs = block.x;
+      const re = block.y + block.h;
+      const ce = block.x + block.w;
       // console.log(rs, cs, re, ce);
       const date = weeks[currentWeek][cs];
       // console.log(date);
-      const localStartTime = new Date(
+      const startTime = new Date(
         date.getFullYear(),
         date.getMonth(),
         date.getDate(),
         rs
       );
-      const localEndTime = new Date(
+      const endTime = new Date(
         date.getFullYear(),
         date.getMonth(),
         date.getDate(),
         re
       );
-      // console.log(localStartTime.toLocaleString());
-      // console.log(localEndTime.toLocaleString());
-      // console.log(date);
-      setEditStartTIme(localStartTime);
-      setEditEndTime(localEndTime);
+      return {
+        startTime,
+        endTime,
+      };
+    };
+    const itemClickListener = (block) => {
+      const times = getStartAndEndTimeAccToPositionOfBlock(block);
+      setEditStartTIme(times.startTime);
+      setEditEndTime(times.endTime);
       setEditedSchedule(null);
       setEditing(true);
     };
     const handleChangesInLayout = (newLayout) => {
       // console.log(layout);
+      // console.log('start position');
+      const startPositionOfMovedBlock = layout.find(
+        (block) => block.i === curI
+      );
+      // console.log(startPositionOfMovedBlock);
+      const schedulesMoved = getSchedules(startPositionOfMovedBlock);
+      // console.log(schedulesMoved);
+      const endPositionOfMovedBlock = newLayout.find(
+        (block) => block.i === curI
+      );
+      // console.log('end position');
+      // console.log(endPositionOfMovedBlock);
+      const updatedTimes = getStartAndEndTimeAccToPositionOfBlock(
+        endPositionOfMovedBlock
+      );
+      // console.log(updatedTimes);
+      for (let schedule of schedulesMoved) {
+        const updatedStartTime = updatedTimes.startTime;
+        const updatedEndtime = addDuration(
+          updatedTimes.startTime,
+          schedule.duration
+        );
+        schedulesApi.update(schedule.id, {
+          ...schedule,
+          start_time: getDateTimeForServer(updatedStartTime),
+          end_time: getDateTimeForServer(updatedEndtime),
+        });
+
+        setLoadedSchedules((prevSchedules) => {
+          return prevSchedules.map((s) => {
+            if (s.id === schedule.id) {
+              return {
+                ...s,
+                start_time: updatedStartTime,
+                end_time: updatedEndtime,
+              };
+            }
+            return s;
+          });
+        });
+      }
+      //
       const changed = [];
       setLayout((prevLayout) => {
         for (let i = 0; i < prevLayout.length; i++) {
@@ -328,13 +398,8 @@ function Home() {
       for (let item of changed) {
         if (item.cur.h > item.prev.h) {
           // item expanded
-          console.log(item);
-          itemClickListener(
-            item.cur.y,
-            item.cur.x,
-            item.cur.y + item.cur.h,
-            item.cur.x + item.cur.w
-          );
+          // console.log(item);
+          itemClickListener(item.cur);
         }
       }
     };
@@ -411,22 +476,14 @@ function Home() {
                     e.stopPropagation();
                     setShowScheduleDescription({ [v]: true });
                   }}
+                  onMouseDownCapture={(e) => {
+                    setCurI(layout[v].i);
+                  }}
                 >
                   <Block
-                    schedules={getSchedules(
-                      layout[v].y,
-                      layout[v].x,
-                      layout[v].y + layout[v].h,
-                      layout[v].x + layout[v].w,
-                      v
-                    )}
+                    schedules={getSchedules(layout[v], v)}
                     addNewListener={() => {
-                      itemClickListener(
-                        layout[v].y,
-                        layout[v].x,
-                        layout[v].y + layout[v].h,
-                        layout[v].x + layout[v].w
-                      );
+                      itemClickListener(layout[v]);
                     }}
                     index={v}
                     showScheduleDescription={showScheduleDescription[v]}

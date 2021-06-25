@@ -7,9 +7,16 @@ import { useGridState } from '../state/gridState';
 import styles from './Navbar.module.scss';
 
 function Navbar() {
-  const { weekString, currentMonth, currentYear } = useDateState();
-  const { layoutTypes, setLayoutType, layoutType, nextPage, prevPage } =
-    useGridState();
+  const { weekString, currentMonth, currentYear, weeks, currentWeek } =
+    useDateState();
+  const {
+    layoutTypes,
+    setLayoutType,
+    layoutType,
+    nextPage,
+    prevPage,
+    switchToCurrentDate,
+  } = useGridState();
   const [selectingLayoutType, setSelectingLayoutType] = useState(false);
   useEffect(() => {
     window.addEventListener('click', () => {
@@ -19,16 +26,19 @@ function Navbar() {
   }, []);
   return (
     <div className={styles.navbar}>
-      <LightButton>Today</LightButton>
+      <LightButton>Add Batch</LightButton>
+      <LightButton>Add Teacher</LightButton>
+      <LightButton onClick={switchToCurrentDate}>Today</LightButton>
       <div className={styles.monthDetails}>
         <MaterialIcon type="navigate_before" onClick={prevPage} />
         <MaterialIcon type="navigate_next" onClick={nextPage} />
         <p className={styles.currentString}>
           {layoutType === layoutTypes.month
             ? monthNames[currentMonth] + ' ' + currentYear
-            : layoutType === layoutTypes.year ||
-              layoutType === layoutTypes.schedule
+            : layoutType === layoutTypes.year
             ? currentYear
+            : layoutType === layoutTypes.day
+            ? weeks[currentWeek][0].getDate() + ' ' + weekString
             : weekString}
         </p>
       </div>

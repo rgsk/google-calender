@@ -14,9 +14,22 @@
   color: white;
   border-radius: 3px;
   box-shadow: rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  cursor: move;
   // border: 1px solid #000000;
+  .scheduleText {
+    .dot {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: white;
+      transform: translateY(-2px);
+      margin: 0 5px;
+    }
+  }
 }
 .emptyBlock {
   background-color: transparent;
   box-shadow: none;
+  cursor: default;
 }

@@ -36,7 +36,10 @@ function Block({
         }}
       >
         {schedules.map((schedule) => (
-          <p key={schedule.id}>{schedule.title}</p>
+          <p className={styles.scheduleText} key={schedule.id}>
+            <span className={styles.dot}></span>
+            {schedule.title}
+          </p>
         ))}
       </div>
     </>
