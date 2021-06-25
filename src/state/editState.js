@@ -1,7 +1,16 @@
+import { useEffect } from 'react';
 import { atom, useRecoilState } from 'recoil';
 import { addDuration } from '../helpers/dateHelper';
-const editingState = atom({
-  key: 'editingState',
+const editingScheduleState = atom({
+  key: 'editingScheduleState',
+  default: false,
+});
+const editingBatchState = atom({
+  key: 'editingBatchState',
+  default: false,
+});
+const editingTeacherState = atom({
+  key: 'editingTeacherState',
   default: false,
 });
 const editStartTimeState = atom({
@@ -17,14 +26,29 @@ const editedScheduleState = atom({
   default: null,
 });
 export const useEditState = () => {
-  const [editing, setEditing] = useRecoilState(editingState);
+  const [editingSchedule, setEditingSchedule] =
+    useRecoilState(editingScheduleState);
+  const [editingBatch, setEditingBatch] = useRecoilState(editingBatchState);
+  const [editingTeacher, setEditingTeacher] =
+    useRecoilState(editingTeacherState);
   const [editStartTime, setEditStartTIme] = useRecoilState(editStartTimeState);
   const [editEndTime, setEditEndTime] = useRecoilState(editEndTimeState);
   const [editedSchedule, setEditedSchedule] =
     useRecoilState(editedScheduleState);
+
   return {
-    editing,
-    setEditing,
+    editingSchedule,
+    setEditingSchedule: (value) => {
+      if (value) {
+        setEditingBatch(false);
+        setEditingTeacher(false);
+      }
+      setEditingSchedule(value);
+    },
+    editingBatch,
+    setEditingBatch,
+    editingTeacher,
+    setEditingTeacher,
     editStartTime,
     setEditStartTIme,
     editEndTime,

@@ -1,0 +1,20 @@
+.name {
+  input {
+    font-size: 1.5rem;
+    width: 100%;
+  }
+  border-bottom: 2px solid var(--color-blue);
+}
+.date {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.duration {
+  input {
+    font-size: 1.3rem;
+    width: 100%;
+  }
+  border-bottom: 1px solid var(--color-blue);
+}

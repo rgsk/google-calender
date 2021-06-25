@@ -9,10 +9,13 @@ export const getDuration = (startTime, endTime) => {
 export const addDuration = (startTime, seconds) => {
   return new Date(startTime.getTime() + seconds * 1000);
 };
-export const getDateTimeForServer = (dateObj) => {
-  const justDate = `${dateObj.getFullYear()}-${
+export const getDateForServer = (dateObj) => {
+  return `${dateObj.getFullYear()}-${
     dateObj.getMonth() + 1
   }-${dateObj.getDate()}`;
+};
+export const getDateTimeForServer = (dateObj) => {
+  const justDate = getDateForServer(dateObj);
   const justTime = `${dateObj.getHours()}:${dateObj.getMinutes()}`;
   return justDate + ' ' + justTime;
 };

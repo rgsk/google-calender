@@ -19,6 +19,9 @@ import {
 import Description from './Description';
 import schedulesApi from '../api/schedulesApi';
 import { useEditState } from '../state/editState';
+import BatchCard from '../components/BatchCard';
+import TeacherCard from '../components/TeacherCard';
+import batchesApi from '../api/batchesApi';
 function Home() {
   const { layout, setLayout, layoutType, layoutTypes, dimension } =
     useGridState();
@@ -31,21 +34,28 @@ function Home() {
     currentYear,
     setCurrentYear,
   } = useDateState();
-  const { loadedSchedules, setLoadedSchedules } = useInfoState();
+  const { loadedSchedules, setLoadedSchedules, setLoadedBatches } =
+    useInfoState();
   const {
-    setEditing,
+    setEditingSchedule,
     setEditEndTime,
     setEditStartTIme,
-    editing,
+    editingSchedule,
     setEditedSchedule,
+    editingTeacher,
+    editingBatch,
   } = useEditState();
   const [showScheduleDescription, setShowScheduleDescription] = useState({});
   useEffect(() => {
     // console.log(currentWeek);
     (async () => {
-      const data = await schedulesApi.getMultiple();
-      if (data.length) {
-        setLoadedSchedules(data);
+      const fetchedSchedules = await schedulesApi.getMultiple();
+      if (fetchedSchedules.length) {
+        setLoadedSchedules(fetchedSchedules);
+      }
+      const fetchedBatches = await batchesApi.getMultiple();
+      if (fetchedBatches.length) {
+        setLoadedBatches(fetchedBatches);
       }
     })();
   }, []);
@@ -62,11 +72,11 @@ function Home() {
       new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59)
     );
     setEditedSchedule(null);
-    setEditing(true);
+    setEditingSchedule(true);
   };
   return (
     <div className={styles.home}>
-      <div className={styles.create} onClick={() => setEditing(true)}>
+      <div className={styles.create} onClick={() => setEditingSchedule(true)}>
         <svg width="36" height="36" viewBox="0 0 36 36">
           <path fill="#34A853" d="M16 16v14h4V20z"></path>
           <path fill="#4285F4" d="M30 16H20l-4 4h14z"></path>
@@ -77,7 +87,14 @@ function Home() {
         <span>Create</span>
       </div>
 
-      {editing && <ScheduleCard />}
+      {editingSchedule ? (
+        <ScheduleCard />
+      ) : editingBatch ? (
+        <BatchCard />
+      ) : editingTeacher ? (
+        <TeacherCard />
+      ) : null}
+
       {layoutType === layoutTypes.year ? (
         <CalenderLayout />
       ) : layoutType === layoutTypes.month ? (
@@ -335,7 +352,7 @@ function Home() {
       setEditStartTIme(times.startTime);
       setEditEndTime(times.endTime);
       setEditedSchedule(null);
-      setEditing(true);
+      setEditingSchedule(true);
     };
     const handleChangesInLayout = (newLayout) => {
       // console.log(layout);

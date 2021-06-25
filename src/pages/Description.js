@@ -12,7 +12,7 @@ function Description({
   close = () => {},
 }) {
   const { loadedSchedules, setLoadedSchedules } = useInfoState();
-  const { setEditing, setEditedSchedule } = useEditState();
+  const { setEditingSchedule, setEditedSchedule } = useEditState();
   // console.log(schedule);
   const remove = async (id) => {
     const data = await schedulesApi.remove(id);
@@ -23,7 +23,7 @@ function Description({
   };
   const edit = (schedule) => {
     setEditedSchedule(schedule);
-    setEditing(true);
+    setEditingSchedule(true);
     close();
   };
   return (

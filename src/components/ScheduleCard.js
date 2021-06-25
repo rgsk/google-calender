@@ -2,13 +2,13 @@ import { useState } from 'react';
 import TimeInput from 'react-time-picker-input';
 import DatePicker from 'react-datepicker';
 import styles from './ScheduleCard.module.scss';
-import MaterialIcon from '../shared/MaterialIcon';
-import StyledButton from '../shared/StyledButton';
 import schedulesApi from '../api/schedulesApi';
 import { useInfoState } from '../state/infoState';
 import { useEditState } from '../state/editState';
-import { getDuration } from '../helpers/dateHelper';
+import { getDateForServer, getDuration } from '../helpers/dateHelper';
 import CommonInputCard from '../shared/CommonInputCard';
+import DropDown from '../shared/DropDown';
+
 const getTime = (date) => {
   // for timepicker to work properly
   // we need to time string formatted as 12:32
@@ -19,9 +19,10 @@ const getTime = (date) => {
   );
 };
 function ScheduleCard() {
-  const { editStartTime, editEndTime, editedSchedule, setEditing } =
+  const { editStartTime, editEndTime, editedSchedule, setEditingSchedule } =
     useEditState();
-  const { setLoadedSchedules } = useInfoState();
+  const { setLoadedSchedules, loadedBatches } = useInfoState();
+  const [batch, setBatch] = useState(loadedBatches[0].name);
   const [title, setTitle] = useState(() => {
     if (editedSchedule) {
       return editedSchedule.title;
@@ -51,12 +52,12 @@ function ScheduleCard() {
       return getTime(editEndTime);
     }
   });
-
+  const close = () => {
+    setEditingSchedule(false);
+  };
   const save = async () => {
     // console.log(scheduleDate);
-    const date = `${scheduleDate.getFullYear()}-${
-      scheduleDate.getMonth() + 1
-    }-${scheduleDate.getDate()}`;
+    const date = getDateForServer(scheduleDate);
     // console.log(date);
     // return;
     const serverDuration = getDuration(startTime, endTime);
@@ -85,7 +86,7 @@ function ScheduleCard() {
             return s;
           });
         });
-        setEditing(false);
+        close();
       }
     } else {
       const data = await schedulesApi.create({
@@ -99,14 +100,14 @@ function ScheduleCard() {
       // console.log(data);
       if (data.entry) {
         setLoadedSchedules((prevSchedules) => [...prevSchedules, data.entry]);
-        setEditing(false);
+        close();
       }
     }
 
     // close();
   };
   return (
-    <CommonInputCard save={save}>
+    <CommonInputCard save={save} close={close}>
       <div className={styles.title}>
         <input
           type="text"
@@ -147,6 +148,14 @@ function ScheduleCard() {
             />
           </div>
         </div>
+      </div>
+      <div className={styles.batch}>
+        <p className={styles.text}>Batch: </p>
+        <DropDown
+          options={loadedBatches.map((batch) => batch.name)}
+          setOption={setBatch}
+          selectedOption={batch}
+        />
       </div>
     </CommonInputCard>
   );

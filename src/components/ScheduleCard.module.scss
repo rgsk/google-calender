@@ -2,8 +2,8 @@
   input {
     font-size: 1.5rem;
     width: 100%;
-    border-bottom: 2px solid var(--color-blue);
   }
+  border-bottom: 2px solid var(--color-blue);
 }
 // border: 1px solid red;
 
@@ -22,5 +22,13 @@
   .time {
     display: flex;
     align-items: center;
+  }
+}
+.batch {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  .text {
+    font-size: 1.3rem;
   }
 }
