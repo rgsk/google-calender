@@ -1,5 +1,11 @@
 import { useEffect } from 'react';
 import { atom, useRecoilState } from 'recoil';
+import { useDateState } from './dateState';
+import {
+  getWeeks,
+  getWeekIndexFromDate,
+  getMonths,
+} from '../helpers/dateHelper';
 export const layoutTypes = {
   day: 'day',
   week: 'week',
@@ -55,9 +61,35 @@ export const useGridState = () => {
   const [layout, setLayout] = useRecoilState(layoutState);
   const [layoutType, setLayoutType] = useRecoilState(layoutTypeState);
   const [dimension, setDimension] = useRecoilState(dimensionState);
+  const {
+    currentYear,
+    weeks,
+    setWeeks,
+    setCurrentWeek,
+    currentWeek,
+    months,
+    setMonths,
+    setCurrentMonth,
+    currentMonth,
+    prevWeek,
+    nextWeek,
+    prevMonth,
+    nextMonth,
+    prevYear,
+    nextYear,
+  } = useDateState();
+
   useEffect(() => {
+    let updatedWeeks;
     switch (layoutType) {
       case layoutTypes['day']:
+        updatedWeeks = getWeeks(currentYear, 1);
+        setCurrentWeek(
+          getWeekIndexFromDate(updatedWeeks, weeks[currentWeek][0])
+        );
+        setWeeks(updatedWeeks);
+        setLayout(createLayout(24, 1));
+
         setDimension({
           rows: 24,
           cols: 1,
@@ -65,18 +97,26 @@ export const useGridState = () => {
         });
         break;
       case layoutTypes['week']:
+        updatedWeeks = getWeeks(currentYear, 7);
+        setCurrentWeek(
+          getWeekIndexFromDate(updatedWeeks, weeks[currentWeek][0])
+        );
+        setWeeks(updatedWeeks);
+        setLayout(createLayout(24, 7));
+
         setDimension({
           rows: 24,
           cols: 7,
           rowLength: 100,
         });
+
         break;
       case layoutTypes['month']:
-        setDimension({
-          rows: 5,
-          cols: 7,
-          rowLength: 150,
-        });
+        let updatedMonths = getMonths(currentYear);
+        // console.log(updatedWeeks);
+        const cMonth = weeks[currentWeek][0].getMonth();
+        setCurrentMonth(cMonth);
+        setMonths(updatedMonths);
 
         break;
       case layoutTypes['schedule']:
@@ -87,18 +127,67 @@ export const useGridState = () => {
         }));
         break;
       case layoutTypes['4 days']:
+        updatedWeeks = getWeeks(currentYear, 4);
+        setCurrentWeek(
+          getWeekIndexFromDate(updatedWeeks, weeks[currentWeek][0])
+        );
+        setWeeks(updatedWeeks);
+        setLayout(createLayout(24, 4));
+
         setDimension({
           rows: 24,
           cols: 4,
           rowLength: 100,
         });
+
         break;
       default:
     }
-  }, [layoutType, setDimension]);
+  }, [layoutType]);
   useEffect(() => {
-    setLayout(createLayout(dimension.rows, dimension.cols));
-  }, [dimension, setLayout]);
+    if (months[currentMonth].length === 35) {
+      setLayout(createLayout(5, 7));
+
+      setDimension({
+        rows: 5,
+        cols: 7,
+        rowLength: 100,
+      });
+    } else {
+      // length 42
+      setLayout(createLayout(6, 7));
+
+      setDimension({
+        rows: 6,
+        cols: 7,
+        rowLength: 100,
+      });
+    }
+  }, [currentMonth, currentYear, months]);
+  const prevPage = () => {
+    if (layoutType === layoutTypes.month) {
+      prevMonth();
+    } else if (
+      layoutType === layoutTypes.year ||
+      layoutType === layoutTypes.schedule
+    ) {
+      prevYear();
+    } else {
+      prevWeek();
+    }
+  };
+  const nextPage = () => {
+    if (layoutType === layoutTypes.month) {
+      nextMonth();
+    } else if (
+      layoutType === layoutTypes.year ||
+      layoutType === layoutTypes.schedule
+    ) {
+      nextYear();
+    } else {
+      nextWeek();
+    }
+  };
   return {
     layout,
     setLayout,
@@ -107,5 +196,7 @@ export const useGridState = () => {
     layoutTypes,
     dimension,
     setDimension,
+    prevPage,
+    nextPage,
   };
 };

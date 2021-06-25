@@ -1,0 +1,64 @@
+.description {
+  //  relative brother wrapper
+  position: absolute;
+  z-index: 100000;
+  background-color: white;
+  color: black;
+  width: 400px;
+  min-height: 150px;
+  box-shadow: var(--decor-box-shadow);
+  border-radius: 6px;
+  overflow: hidden;
+  padding: 0.5rem;
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .rest {
+    // border: 1px solid blue;
+    padding: 1rem;
+    padding-right: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .singleSchedule {
+      // border: 1px solid pink;
+      display: flex;
+      gap: 20px;
+      // border: 1px solid red;
+      .marker {
+        height: 12px;
+        width: 12px;
+        background-color: var(--color-slateblue);
+        border-radius: 3px;
+        transform: translateY(10px);
+      }
+      .info {
+        flex: 1;
+        .titleButtons {
+          display: flex;
+          justify-content: space-between;
+          .title {
+            font-size: 1.3rem;
+          }
+          .buttons {
+            // border: 1px solid red;
+            display: flex;
+            align-items: flex-start;
+          }
+        }
+
+        .dateTime {
+          display: flex;
+          gap: 10px;
+          .time {
+            display: flex;
+            gap: 3px;
+          }
+        }
+      }
+    }
+  }
+}

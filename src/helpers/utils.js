@@ -31,3 +31,12 @@ export const range = (min, max) => {
   }
   return arr;
 };
+export const objectsAreSame = (obj1, obj2) => {
+  // works only if there same number of keys
+  for (let key in obj1) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+  return true;
+};

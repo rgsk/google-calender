@@ -23,18 +23,16 @@
       box-shadow: rgba(0, 0, 0, 0.23) 0px 6px 6px;
     }
   }
-  .block {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    // border: 1px solid #000000;
+  .calenderWrapper {
+    position: relative;
+    // width: 80vw;
+    // border: 10px solid red;
   }
   .gridContainer {
     display: flex;
     justify-content: flex-end;
     // border: 1px solid purple;
     .rowNames {
-      width: 10%;
       // border: 1px solid orange;
       display: flex;
       flex-direction: column;
@@ -50,7 +48,7 @@
     }
     .columnGrid {
       // border: 1px solid blue;
-      width: 90%;
+
       display: flex;
       flex-direction: column;
       .columnNames {
@@ -88,6 +86,18 @@
         }
         .grid {
           // overflow: hidden;
+          .wrapper {
+            position: relative;
+            color: white;
+            // some weird 0 is coming on deleting the entry
+            // so we made it white and text in children made black
+            // border: 1px solid blue;
+            .title {
+              // border: 1px solid red;
+              text-align: center;
+              color: black;
+            }
+          }
         }
       }
     }

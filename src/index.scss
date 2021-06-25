@@ -17,6 +17,7 @@ button {
   --color-blue: #196ddc;
   --color-light-gray-text: rgb(82, 82, 82);
   --color-light-gray-hover: rgb(235, 235, 235);
+  --color-slateblue: #737fc1;
   --decor-box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
     rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
@@ -32,4 +33,14 @@ button {
       margin: 0px !important;
     }
   }
+}
+.hidden {
+  visibility: hidden;
+}
+.react-grid-item > .react-resizable-handle.react-resizable-handle-s {
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  // background-color: red;
+  opacity: 0;
 }

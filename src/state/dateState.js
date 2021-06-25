@@ -3,12 +3,18 @@ import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
 import {
   getWeeks,
   getAssociatedMonthsAndYearForGivenWeek,
+  getWeekIndexFromDate,
+  getMonths,
 } from '../helpers/dateHelper';
 import { monthNames } from '../helpers/names';
-
+import { useGridState } from './gridState';
 const currentWeekState = atom({
   key: 'currentWeekState',
-  default: 0,
+  default: getWeekIndexFromDate(getWeeks(2021), new Date()),
+});
+const currentMonthState = atom({
+  key: 'currentMonthState',
+  default: new Date().getMonth(),
 });
 const currentYearState = atom({
   key: 'currentYearState',
@@ -16,14 +22,22 @@ const currentYearState = atom({
 });
 const weeksState = atom({
   key: 'weeksState',
-  default: getWeeks(2021),
+  default: getWeeks(2021, 7),
+});
+const monthsState = atom({
+  key: 'monthsState',
+  default: getMonths(2021),
 });
 
 export const useDateState = () => {
   const [currentWeek, setCurrentWeek] = useRecoilState(currentWeekState);
+  const [currentMonth, setCurrentMonth] = useRecoilState(currentMonthState);
   const [currentYear, setCurrentYear] = useRecoilState(currentYearState);
   const [weeks, setWeeks] = useRecoilState(weeksState);
+  const [months, setMonths] = useRecoilState(monthsState);
+
   const weekString = useRecoilValue(currentWeekStringValue);
+
   const nextWeek = () => {
     const nextWeekIdx = currentWeek + 1;
     if (nextWeekIdx < weeks.length) {
@@ -46,24 +60,64 @@ export const useDateState = () => {
       setCurrentWeek(prevYearWeeks.length - 2);
     }
   };
+  const nextMonth = () => {
+    const nextMonthIdx = currentMonth + 1;
+    if (nextMonthIdx < 12) {
+      setCurrentMonth(nextMonthIdx);
+    } else {
+      const nextYearMonths = getMonths(currentYear + 1);
+      setMonths(nextYearMonths);
+      setCurrentYear(currentYear + 1);
+      setCurrentMonth(0);
+    }
+  };
+  const prevMonth = () => {
+    const prevMonthIdx = currentMonth - 1;
+    if (prevMonthIdx >= 0) {
+      setCurrentMonth(prevMonthIdx);
+    } else {
+      const prevYearMonths = getMonths(currentYear - 1);
+      setMonths(prevYearMonths);
+      setCurrentYear(currentYear - 1);
+      setCurrentMonth(11);
+    }
+  };
+  const prevYear = () => {
+    setCurrentYear(currentYear - 1);
+  };
+  const nextYear = () => {
+    setCurrentYear(currentYear + 1);
+  };
+
   return {
     currentWeek,
     setCurrentWeek,
-    nextWeek,
     prevWeek,
+    nextWeek,
+    prevMonth,
+    nextMonth,
+    prevYear,
+    nextYear,
     currentYear,
     setCurrentYear,
     weeks,
     setWeeks,
     weekString,
+
+    currentMonth,
+    setCurrentMonth,
+    months,
+    setMonths,
   };
 };
+
 export const currentWeekStringValue = selector({
   key: 'currentWeekStringValue',
   get: ({ get }) => {
     const weeks = get(weeksState);
     const currentWeek = get(currentWeekState);
     const details = getAssociatedMonthsAndYearForGivenWeek(weeks[currentWeek]);
+    if (!details) return '';
     // console.log(details);
     if (details.length === 1) {
       return monthNames[details[0][0]] + ' ' + details[0][1];

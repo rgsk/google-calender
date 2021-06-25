@@ -5,6 +5,9 @@ import { getDuration } from '../helpers/utils';
 import styles from './ScheduleCard.module.scss';
 import MaterialIcon from '../shared/MaterialIcon';
 import StyledButton from '../shared/StyledButton';
+import { useDateState } from '../state/dateState';
+import schedulesApi from '../api/schedulesApi';
+import { useInfoState } from '../state/infoState';
 const getTime = (date) => {
   // for timepicker to work properly
   // we need to time string formatted as 12:32
@@ -17,12 +20,39 @@ const getTime = (date) => {
 function Card({
   initialStartTime = new Date(),
   initialEndTime = new Date(),
+  schedule = null,
   close = () => {},
 }) {
-  const [title, setTitle] = useState('');
-  const [scheduleDate, setScheduleDate] = useState(initialStartTime);
-  const [startTime, setStartTime] = useState(getTime(initialStartTime));
-  const [endTime, setEndTime] = useState(getTime(initialEndTime));
+  const { setLoadedSchedules } = useInfoState();
+  const [title, setTitle] = useState(() => {
+    if (schedule) {
+      return schedule.title;
+    } else {
+      return '';
+    }
+  });
+  const [scheduleDate, setScheduleDate] = useState(() => {
+    if (schedule) {
+      // editing
+      return schedule.start_time;
+    } else {
+      return initialStartTime;
+    }
+  });
+  const [startTime, setStartTime] = useState(() => {
+    if (schedule) {
+      return getTime(schedule.start_time);
+    } else {
+      return getTime(initialStartTime);
+    }
+  });
+  const [endTime, setEndTime] = useState(() => {
+    if (schedule) {
+      return getTime(schedule.end_time);
+    } else {
+      return getTime(initialEndTime);
+    }
+  });
 
   const save = async () => {
     // console.log(scheduleDate);
@@ -38,21 +68,43 @@ function Card({
     const serverEndTime = date + ' ' + endTime;
     // console.log(serverStartTime);
     // console.log(serverEndTime);
-    const response = await fetch('http://localhost:5000/schedules', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
+    if (schedule) {
+      const data = await schedulesApi.update(schedule.id, {
         batch_id: 1,
         title,
         start_time: serverStartTime,
         end_time: serverEndTime,
         duration: serverDuration,
-      }),
-    });
-    const data = await response.json();
-    console.log(data);
+      });
+
+      // console.log(data);
+      if (data.entry) {
+        setLoadedSchedules((prevSchedules) => {
+          return prevSchedules.map((s) => {
+            if (s.id === schedule.id) {
+              return data.entry;
+            }
+            return s;
+          });
+        });
+        close();
+      }
+    } else {
+      const data = await schedulesApi.create({
+        batch_id: 1,
+        title,
+        start_time: serverStartTime,
+        end_time: serverEndTime,
+        duration: serverDuration,
+      });
+
+      // console.log(data);
+      if (data.entry) {
+        setLoadedSchedules((prevSchedules) => [...prevSchedules, data.entry]);
+        close();
+      }
+    }
+
     // close();
   };
   return (

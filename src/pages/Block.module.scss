@@ -1,0 +1,22 @@
+// .scheduleDescription {
+//   // relative brother wrapper
+
+//   position: absolute;
+//   top: 0;
+//   left: 100%;
+//   background-color: white;
+// }
+.block {
+  width: 100%;
+  padding: 5px;
+  overflow: auto;
+  background-color: var(--color-slateblue);
+  color: white;
+  border-radius: 3px;
+  box-shadow: rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  // border: 1px solid #000000;
+}
+.emptyBlock {
+  background-color: transparent;
+  box-shadow: none;
+}
