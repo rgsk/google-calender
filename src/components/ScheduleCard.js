@@ -5,9 +5,9 @@ import { getDuration } from '../helpers/utils';
 import styles from './ScheduleCard.module.scss';
 import MaterialIcon from '../shared/MaterialIcon';
 import StyledButton from '../shared/StyledButton';
-import { useDateState } from '../state/dateState';
 import schedulesApi from '../api/schedulesApi';
 import { useInfoState } from '../state/infoState';
+import { useEditState } from '../state/editState';
 const getTime = (date) => {
   // for timepicker to work properly
   // we need to time string formatted as 12:32
@@ -17,40 +17,37 @@ const getTime = (date) => {
     `${date.getMinutes()}`.padStart(2, 0)
   );
 };
-function Card({
-  initialStartTime = new Date(),
-  initialEndTime = new Date(),
-  schedule = null,
-  close = () => {},
-}) {
+function Card() {
+  const { editStartTime, editEndTime, editedSchedule, setEditing } =
+    useEditState();
   const { setLoadedSchedules } = useInfoState();
   const [title, setTitle] = useState(() => {
-    if (schedule) {
-      return schedule.title;
+    if (editedSchedule) {
+      return editedSchedule.title;
     } else {
       return '';
     }
   });
   const [scheduleDate, setScheduleDate] = useState(() => {
-    if (schedule) {
+    if (editedSchedule) {
       // editing
-      return schedule.start_time;
+      return editedSchedule.start_time;
     } else {
-      return initialStartTime;
+      return editStartTime;
     }
   });
   const [startTime, setStartTime] = useState(() => {
-    if (schedule) {
-      return getTime(schedule.start_time);
+    if (editedSchedule) {
+      return getTime(editedSchedule.start_time);
     } else {
-      return getTime(initialStartTime);
+      return getTime(editStartTime);
     }
   });
   const [endTime, setEndTime] = useState(() => {
-    if (schedule) {
-      return getTime(schedule.end_time);
+    if (editedSchedule) {
+      return getTime(editedSchedule.end_time);
     } else {
-      return getTime(initialEndTime);
+      return getTime(editEndTime);
     }
   });
 
@@ -68,8 +65,8 @@ function Card({
     const serverEndTime = date + ' ' + endTime;
     // console.log(serverStartTime);
     // console.log(serverEndTime);
-    if (schedule) {
-      const data = await schedulesApi.update(schedule.id, {
+    if (editedSchedule) {
+      const data = await schedulesApi.update(editedSchedule.id, {
         batch_id: 1,
         title,
         start_time: serverStartTime,
@@ -81,13 +78,13 @@ function Card({
       if (data.entry) {
         setLoadedSchedules((prevSchedules) => {
           return prevSchedules.map((s) => {
-            if (s.id === schedule.id) {
+            if (s.id === editedSchedule.id) {
               return data.entry;
             }
             return s;
           });
         });
-        close();
+        setEditing(false);
       }
     } else {
       const data = await schedulesApi.create({
@@ -101,7 +98,7 @@ function Card({
       // console.log(data);
       if (data.entry) {
         setLoadedSchedules((prevSchedules) => [...prevSchedules, data.entry]);
-        close();
+        setEditing(false);
       }
     }
 
@@ -110,7 +107,7 @@ function Card({
   return (
     <div className={styles.card}>
       <div className={styles.top}>
-        <MaterialIcon type="close" onClick={close} />
+        <MaterialIcon type="close" onClick={() => setEditing(false)} />
       </div>
       <div className={styles.rest}>
         <div className={styles.mid}>

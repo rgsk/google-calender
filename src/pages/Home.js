@@ -35,8 +35,7 @@ function Home() {
     setEditEndTime,
     setEditStartTIme,
     editing,
-    editStartTime,
-    editEndTime,
+    setEditedSchedule,
   } = useEditState();
   const [showScheduleDescription, setShowScheduleDescription] = useState({});
   useEffect(() => {
@@ -60,6 +59,7 @@ function Home() {
     setEditEndTime(
       new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59)
     );
+    setEditedSchedule(null);
     setEditing(true);
   };
   return (
@@ -75,13 +75,7 @@ function Home() {
         Create
       </div>
 
-      {editing && (
-        <ScheduleCard
-          close={() => setEditing(false)}
-          initialStartTime={editStartTime}
-          initialEndTime={editEndTime}
-        />
-      )}
+      {editing && <ScheduleCard />}
       {layoutType === layoutTypes.year ? (
         <CalenderLayout />
       ) : layoutType === layoutTypes.month ? (
@@ -312,6 +306,7 @@ function Home() {
       // console.log(date);
       setEditStartTIme(localStartTime);
       setEditEndTime(localEndTime);
+      setEditedSchedule(null);
       setEditing(true);
     };
     const handleChangesInLayout = (newLayout) => {

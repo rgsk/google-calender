@@ -3,6 +3,7 @@ import MaterialIcon from '../shared/MaterialIcon';
 import { getDayAndDate, getTime12HourWithMinutes } from '../helpers/dateHelper';
 import schedulesApi from '../api/schedulesApi';
 import { useInfoState } from '../state/infoState';
+import { useEditState } from '../state/editState';
 function Description({
   schedules = [],
   vertical,
@@ -11,6 +12,7 @@ function Description({
   close = () => {},
 }) {
   const { loadedSchedules, setLoadedSchedules } = useInfoState();
+  const { setEditing, setEditedSchedule } = useEditState();
   // console.log(schedule);
   const remove = async (id) => {
     const data = await schedulesApi.remove(id);
@@ -18,6 +20,11 @@ function Description({
     setLoadedSchedules((prev) => {
       return prev.filter((schedule) => schedule.id !== id);
     });
+  };
+  const edit = (schedule) => {
+    setEditedSchedule(schedule);
+    setEditing(true);
+    close();
   };
   return (
     <div
@@ -31,7 +38,11 @@ function Description({
       <div className={styles.top}>
         {schedules.length === 1 && (
           <>
-            <MaterialIcon type="edit" meta="outlined" />
+            <MaterialIcon
+              type="edit"
+              meta="outlined"
+              onClick={() => edit(schedules[0])}
+            />
             <MaterialIcon
               type="delete"
               meta="outlined"
@@ -53,7 +64,11 @@ function Description({
                 <p className={styles.title}>{schedule.title}</p>
                 {schedules.length > 1 && (
                   <p className={styles.buttons}>
-                    <MaterialIcon type="edit" meta="outlined" />
+                    <MaterialIcon
+                      type="edit"
+                      meta="outlined"
+                      onClick={() => edit(schedule)}
+                    />
                     <MaterialIcon
                       type="delete"
                       meta="outlined"
