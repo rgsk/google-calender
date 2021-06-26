@@ -1,0 +1,34 @@
+.visible-column-enter {
+  transform: translateX(-100%);
+}
+.visible-column-enter-active {
+  transform: translateX(0%);
+  transition: all 500ms ease;
+}
+.visible-column-enter-done {
+}
+.visible-column-exit {
+}
+.visible-column-exit-active {
+  transform: translateX(-100%);
+  transition: all 500ms ease-in;
+}
+.visible-column-exit-done {
+}
+.close-column-enter {
+  opacity: 0;
+}
+.close-column-enter-active {
+  opacity: 1;
+  transition: all 500ms ease;
+}
+.close-column-enter-done {
+}
+.close-column-exit {
+}
+.close-column-exit-active {
+  opacity: 0;
+  transition: all 500ms ease-in;
+}
+.close-column-exit-done {
+}

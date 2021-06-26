@@ -12,7 +12,9 @@ export const layoutTypes = {
   week: 'week',
   month: 'month',
   year: 'year',
+  schedule: 'schedule',
   '4 days': '4 days',
+  '3 days': '3 days',
 };
 
 // const largeLayout = [
@@ -170,6 +172,21 @@ export const useGridState = () => {
         setDimension({
           rows: 24,
           cols: 4,
+          rowLength: 100,
+        });
+
+        break;
+      case layoutTypes['3 days']:
+        updatedWeeks = getWeeks(currentYear, 3);
+        setCurrentWeek(
+          getWeekIndexFromDate(updatedWeeks, weeks[currentWeek][0])
+        );
+        setWeeks(updatedWeeks);
+        setLayout(createLayout(24, 3));
+
+        setDimension({
+          rows: 24,
+          cols: 3,
           rowLength: 100,
         });
 

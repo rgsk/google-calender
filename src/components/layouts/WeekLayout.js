@@ -180,7 +180,7 @@ function WeekLayout() {
               height: dimension.rowLength + v / 30 + 'px',
             }}
           >
-            {v === 0 ? 'GMT+05:30' : getTime12Hour(v)}
+            {v === 0 ? 'GMT +05:30' : getTime12Hour(v)}
           </p>
         ))}
       </div>

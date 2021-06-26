@@ -11,7 +11,7 @@ function Create() {
         <path fill="#EA4335" d="M20 16V6h-4v14z"></path>
         <path fill="none" d="M0 0h36v36H0z"></path>
       </svg>
-      <span>Create</span>
+      <span className={styles.text}>Create</span>
     </div>
   );
 }

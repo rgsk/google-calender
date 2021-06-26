@@ -1,4 +1,8 @@
-.navbar {
+.spacer {
+  flex: 1;
+}
+.desktopNavbar,
+.mobileNavbar {
   z-index: 100;
   background-color: white;
   position: fixed;
@@ -9,18 +13,59 @@
   border-bottom: 1px solid gray;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 50px;
-  .monthDetails {
+  padding: 0 1rem;
+}
+.desktopNavbar {
+  @media (max-width: 900px) {
+    display: none;
+  }
+
+  .header {
     display: flex;
-    justify-content: center;
     align-items: center;
-    // border: 1px solid blue;
-    .currentString {
-      margin-left: 2rem;
-      width: 200px;
-      // border: 1px solid red;
-      font-size: 1.1rem;
+    gap: 10px;
+    img {
+      width: 3rem;
+    }
+    p {
+      font-size: 1.4rem;
+      color: var(--color-light-gray-text);
+    }
+  }
+  .rest {
+    padding: 0 3rem;
+    gap: 20px;
+    flex: 1;
+    align-items: center;
+    // border: 1px solid red;
+    display: flex;
+    .monthDetails {
+      display: flex;
+
+      align-items: center;
+      // border: 1px solid blue;
+      .dateString {
+        margin-left: 2rem;
+        width: 200px;
+        // border: 1px solid red;
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+.mobileNavbar {
+  @media (min-width: 901px) {
+    display: none;
+  }
+  gap: 20px;
+
+  .modalContent {
+    padding-right: 0.5rem;
+    .title {
+      padding: 1rem;
+      font-size: 1.5rem;
+      font-weight: normal;
+      color: var(--color-light-gray-text);
     }
   }
 }

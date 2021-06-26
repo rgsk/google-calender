@@ -35,11 +35,11 @@ function Home() {
   const handlers = useSwipeable({
     onSwipedLeft: (e) => {
       // console.log(e);
-      prevPage();
+      nextPage();
     },
     onSwipedRight: (e) => {
       // console.log(e);
-      nextPage();
+      prevPage();
     },
     // trackMouse: true,
   });
