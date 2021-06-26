@@ -1,7 +1,7 @@
 import styles from './DropDown.module.scss';
 import { useEffect, useState, useRef } from 'react';
 import LightButton from '../buttons/LightButton';
-import { largestCommonCharacters, revertObj } from '../../helpers/utils';
+import { largestCommonCharacters } from '../../helpers/utils';
 function DropDown({
   options,
   setOption,
@@ -13,34 +13,84 @@ function DropDown({
   const [dropDownActive, setDropdownActive] = useState(false);
   const [textInput, setTextInput] = useState('');
   const [sortedOptions, setSortedOptions] = useState(options);
+  const [hoveredIdx, setHoveredIdx] = useState(-1);
   const optionsRef = useRef();
   useEffect(() => {
-    window.addEventListener('click', () => {
+    const clickCallBack = () => {
       // console.log('window clicked');
       setDropdownActive(false);
-    });
+    };
+    window.addEventListener('click', clickCallBack);
+    const keyDownCallBack = (e) => {
+      setDropdownActive((dropDownActive) => {
+        if (dropDownActive) {
+          // console.log(e);
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            // console.log('arrow down');
+            setHoveredIdx((hoveredIdx) => {
+              const nextHoverIdx = hoveredIdx + 1;
+              if (nextHoverIdx < sortedOptions.length) {
+                return nextHoverIdx;
+              } else {
+                return 0;
+              }
+            });
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setHoveredIdx((hoveredIdx) => {
+              const prevHoverIdx = hoveredIdx - 1;
+              if (prevHoverIdx >= 0) {
+                return prevHoverIdx;
+              } else {
+                return sortedOptions.length - 1;
+              }
+            });
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            setHoveredIdx((hoveredIdx) => {
+              setSortedOptions((sortedOptions) => {
+                const option = sortedOptions[hoveredIdx];
+                setTextInput(methodBeforeDisplay(option));
+                setDropdownActive(false);
+                setOption(option);
+                return sortedOptions;
+              });
+
+              return hoveredIdx;
+            });
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            setDropdownActive(false);
+          }
+        }
+        return dropDownActive;
+      });
+    };
+    window.addEventListener('keydown', keyDownCallBack);
+    return () => {
+      window.removeEventListener('click', clickCallBack);
+      window.removeEventListener('keydown', keyDownCallBack);
+    };
   }, []);
   useEffect(() => {
-    const optionScoreMap = {};
-    for (let option of sortedOptions) {
-      const optionString = methodBeforeDisplay(option);
-      optionScoreMap[optionString] = largestCommonCharacters(
-        optionString,
-        textInput
-      );
+    if (type === 'text') {
+      const optionScoreMap = new Map();
+      for (let option of sortedOptions) {
+        optionScoreMap.set(
+          option,
+          largestCommonCharacters(methodBeforeDisplay(option), textInput)
+        );
+      }
+      // console.log(optionScoreMap);
+      // console.log(optionScoreMap.entries());
+      const arr = [...optionScoreMap.entries()];
+      arr.sort((a, b) => b[1] - a[1]);
+      // console.log(arr);
+      setSortedOptions(arr.map((v) => v[0]));
     }
-    // console.log(optionScoreMap);
-    // const revertedMap = revertObj(optionScoreMap);
-    // const counts = Object.keys(revertedMap);
-    // counts.sort((a, b) => b - a);
-    // setSortedOptions(() => {
-    //   const arr = [];
-    //   for (let v in counts) {
-    //     arr.push(revertedMap.push);
-    //   }
-    // });
   }, [textInput]);
-  const inputKeyDown = (e) => {};
+
   return (
     <div className={styles.container}>
       {type === 'dropDown' ? (
@@ -71,11 +121,24 @@ function DropDown({
           <input
             type="text"
             value={textInput}
-            onChange={(e) => setTextInput(e.target.value)}
-            onKeyDown={inputKeyDown}
+            onKeyDown={(e) => {
+              if (e.key === 'ArrowDown') {
+                if (!dropDownActive) {
+                  e.preventDefault();
+                  setDropdownActive(true);
+                  setHoveredIdx(0);
+                  e.stopPropagation();
+                }
+              }
+            }}
+            onChange={(e) => {
+              setTextInput(e.target.value);
+              setDropdownActive(true);
+              setHoveredIdx(0);
+            }}
             onClick={(e) => {
               e.stopPropagation();
-              console.log('clicked');
+              // console.log('clicked');
               setDropdownActive(true);
             }}
           ></input>
@@ -86,7 +149,10 @@ function DropDown({
           {sortedOptions.map((option, i) => (
             <p
               key={i}
-              className={styles.option}
+              className={[
+                styles.option,
+                hoveredIdx === i ? styles.hovered : '',
+              ].join(' ')}
               onClick={(e) => {
                 // console.log('option clicked');
                 e.stopPropagation();

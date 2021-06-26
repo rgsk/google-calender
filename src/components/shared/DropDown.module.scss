@@ -14,6 +14,7 @@
   }
   .options {
     // display: none;
+    z-index: 200;
     border: 1px solid var(--color-light-gray-hover);
     padding: 0.5rem 0;
     background-color: white;
@@ -29,7 +30,8 @@
       text-transform: capitalize;
 
       padding: 0.5rem 1rem;
-      &:hover {
+      &:hover,
+      &.hovered {
         background-color: var(--color-light-gray-hover);
       }
     }
