@@ -14,6 +14,7 @@ import {
   addDuration,
   getDateTimeForServer,
   getTime12Hour,
+  getWeekIndexFromDate,
 } from '../../helpers/dateHelper';
 function WeekLayout() {
   const {
@@ -28,53 +29,60 @@ function WeekLayout() {
   const { dimension, layout, setLayout } = useGridState();
   const [curI, setCurI] = useState();
   const [showScheduleDescription, setShowScheduleDescription] = useState({});
+  const [blocks, setBlocks] = useState([]);
   useEffect(() => {
     window.addEventListener('click', (e) => {
       // console.log(e);
       setShowScheduleDescription({});
     });
   }, []);
-  const getSchedules = (block, idx = -1) => {
-    // rs, cs, re, ce
-    const rs = block.y;
-    const cs = block.x;
-    const re = block.y + block.h;
-    const ce = block.x + block.w;
-    // console.log(currentWeekSchedules);
-    const date = weeks[currentWeek][cs];
-    if (!date) return;
-    // console.log(date);
-    const localStartTime = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      rs
-    );
-    const schedules = [];
+  useEffect(() => {
+    const blocksForCurWeek = [];
     loadedSchedules.forEach((schedule) => {
-      if (
-        schedule.start_time.getFullYear() === date.getFullYear() &&
-        schedule.start_time.getMonth() === date.getMonth() &&
-        schedule.start_time.getDate() === date.getDate() &&
-        schedule.start_time.getHours() === localStartTime.getHours()
-      ) {
-        // console.log(schedule);
-        schedules.push(schedule);
-        if (idx !== -1) {
-          let h = schedule.end_time.getHours() - schedule.start_time.getHours();
-
-          if (schedule.end_time.getMinutes() > 0) {
-            h++;
-          }
-          if (layout[idx].h < h) {
-            setLayout((prevLayout) => {
-              const updatedBlock = { ...prevLayout[idx], h };
-              return prevLayout.map((v, i) => (i === idx ? updatedBlock : v));
-            });
-          }
+      const idx = getWeekIndexFromDate(weeks, schedule.start_time);
+      if (idx === currentWeek) {
+        // console.log(schedule.title);
+        const day = schedule.start_time.getDay();
+        // console.log(day);
+        const s = schedule.start_time.getHours();
+        let e = schedule.end_time.getHours();
+        if (schedule.end_time.getMinutes() > 0) {
+          e++;
         }
+        for (let j = s; j < e; j++) {
+          // console.log(j);
+        }
+        const h = e - s;
+        // console.log(h);
+        blocksForCurWeek.push({
+          schedule,
+          rowStart: s,
+          rowEnd: e,
+          height: h,
+          column: day,
+        });
       }
     });
+    setBlocks(blocksForCurWeek);
+  }, [currentWeek, loadedSchedules, weeks]);
+
+  const getSchedules = (row, col, idx = -1) => {
+    // debugger;
+    // rs, cs, re, ce
+    let schedules = [];
+    for (let block of blocks) {
+      if (block.column === col && block.rowStart === row) {
+        schedules.push(block.schedule);
+
+        if (idx !== -1 && layout[idx].h < block.height) {
+          setLayout((prevLayout) => {
+            const updatedBlock = { ...prevLayout[idx], h: block.height };
+            return prevLayout.map((v, i) => (i === idx ? updatedBlock : v));
+          });
+        }
+      }
+    }
+
     return schedules;
   };
   const getStartAndEndTimeAccToPositionOfBlock = (block) => {
@@ -114,7 +122,11 @@ function WeekLayout() {
     // console.log('start position');
     const startPositionOfMovedBlock = layout.find((block) => block.i === curI);
     // console.log(startPositionOfMovedBlock);
-    const schedulesMoved = getSchedules(startPositionOfMovedBlock);
+    const schedulesMoved = getSchedules(
+      startPositionOfMovedBlock.y,
+      startPositionOfMovedBlock.x,
+      -1
+    );
     // console.log(schedulesMoved);
     const endPositionOfMovedBlock = newLayout.find((block) => block.i === curI);
     // console.log('end position');
@@ -248,7 +260,7 @@ function WeekLayout() {
                 }}
               >
                 <Block
-                  schedules={getSchedules(layout[v], v)}
+                  schedules={getSchedules(layout[v].y, layout[v].x, v)}
                   addNewListener={() => {
                     itemClickListener(layout[v]);
                   }}
