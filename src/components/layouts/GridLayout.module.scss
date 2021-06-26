@@ -1,0 +1,74 @@
+.gridContainer {
+  display: flex;
+  justify-content: flex-end;
+  // border: 1px solid purple;
+  .rowNames {
+    // border: 1px solid orange;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
+    padding-top: 49px;
+    gap: 10px;
+    p {
+      // background-color: antiquewhite;
+      text-align: center;
+      // border-top: 1px solid black;
+      border-bottom: 1px solid black;
+    }
+  }
+  .columnGrid {
+    // border: 1px solid blue;
+
+    display: flex;
+    flex-direction: column;
+    .columnNames {
+      // border: 1px solid red;
+      min-height: 30px;
+      min-width: 100%;
+      display: grid;
+
+      .column {
+        text-transform: uppercase;
+        border-left: 1px solid black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .gridParent {
+      border: 1px solid black;
+      overflow: hidden;
+      position: relative;
+      .mask {
+        position: absolute;
+        top: 0;
+        left: 0;
+        // background-color: aqua;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        background-color: black;
+        gap: 1px;
+        .tab {
+          background-color: white;
+        }
+      }
+      .grid {
+        // overflow: hidden;
+        .wrapper {
+          position: relative;
+          color: white;
+          // some weird 0 is coming on deleting the entry
+          // so we made it white and text in children made black
+          // border: 1px solid blue;
+          .title {
+            // border: 1px solid red;
+            text-align: center;
+            color: black;
+          }
+        }
+      }
+    }
+  }
+}

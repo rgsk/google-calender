@@ -1,8 +1,13 @@
 import styles from './DropDown.module.scss';
 import { useEffect, useState } from 'react';
-import LightButton from '../shared/LightButton';
+import LightButton from '../buttons/LightButton';
 
-function DropDown({ options, setOption, selectedOption }) {
+function DropDown({
+  options,
+  setOption,
+  selectedOption,
+  methodBeforeDisplay = (val) => val,
+}) {
   const [dropDownActive, setDropdownActive] = useState(false);
 
   useEffect(() => {
@@ -20,7 +25,9 @@ function DropDown({ options, setOption, selectedOption }) {
       }}
     >
       <div className={styles.selector}>
-        <span className={styles.typeText}>{selectedOption}</span>
+        <span className={styles.typeText}>
+          {methodBeforeDisplay(selectedOption)}
+        </span>
         <span
           class="material-icons-outlined"
           style={{
@@ -42,7 +49,7 @@ function DropDown({ options, setOption, selectedOption }) {
                   setOption(option);
                 }}
               >
-                {option}
+                {methodBeforeDisplay(option)}
               </p>
             ))}
           </div>

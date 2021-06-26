@@ -1,10 +1,8 @@
 import styles from './CommonInputCard.module.scss';
-import { useEditState } from '../state/editState';
-import MaterialIcon from '../shared/MaterialIcon';
-import StyledButton from '../shared/StyledButton';
+import MaterialIcon from '../buttons/MaterialIcon';
+import StyledButton from '../buttons/StyledButton';
 
 function CommonInputCard({ children, save, close }) {
-  const { setEditing } = useEditState();
   return (
     <div className={styles.card}>
       <div className={styles.top}>

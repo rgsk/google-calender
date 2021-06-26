@@ -1,13 +1,10 @@
 import styles from './BatchCard.module.scss';
-import CommonInputCard from '../shared/CommonInputCard';
+import CommonInputCard from './CommonInputCard';
 import { useState } from 'react';
-import { useEditState } from '../state/editState';
-import batchesApi from '../api/batchesApi';
+import { useEditState } from '../../state/editState';
+import batchesApi from '../../api/batchesApi';
 import DatePicker from 'react-datepicker';
-import { getDateForServer } from '../helpers/dateHelper';
-import { useInfoState } from '../state/infoState';
-import DropDown from '../shared/DropDown';
-
+import { getDateForServer } from '../../helpers/dateHelper';
 function BatchCard() {
   const [name, setName] = useState('');
   const [duration, setDuration] = useState('');

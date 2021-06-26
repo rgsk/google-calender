@@ -3,7 +3,7 @@ import styles from './App.module.scss';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import First from './pages/First';
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar/Navbar';
 function App() {
   useEffect(() => {
     (async () => {

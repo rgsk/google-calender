@@ -2,11 +2,11 @@ import { useState } from 'react';
 import TimeInput from 'react-time-picker-input';
 import DatePicker from 'react-datepicker';
 import styles from './ScheduleCard.module.scss';
-import schedulesApi from '../api/schedulesApi';
-import { useInfoState } from '../state/infoState';
-import { useEditState } from '../state/editState';
-import { getDateForServer, getDuration } from '../helpers/dateHelper';
-import CommonInputCard from '../shared/CommonInputCard';
+import schedulesApi from '../../api/schedulesApi';
+import { useInfoState } from '../../state/infoState';
+import { useEditState } from '../../state/editState';
+import { getDateForServer, getDuration } from '../../helpers/dateHelper';
+import CommonInputCard from './CommonInputCard';
 import DropDown from '../shared/DropDown';
 
 const getTime = (date) => {
@@ -22,7 +22,7 @@ function ScheduleCard() {
   const { editStartTime, editEndTime, editedSchedule, setEditingSchedule } =
     useEditState();
   const { setLoadedSchedules, loadedBatches } = useInfoState();
-  const [batch, setBatch] = useState(loadedBatches[0].name);
+  const [batch, setBatch] = useState(loadedBatches[0]);
   const [title, setTitle] = useState(() => {
     if (editedSchedule) {
       return editedSchedule.title;
@@ -68,8 +68,9 @@ function ScheduleCard() {
     // console.log(serverStartTime);
     // console.log(serverEndTime);
     if (editedSchedule) {
+      // updating the schedule
       const data = await schedulesApi.update(editedSchedule.id, {
-        batch_id: 1,
+        batch_id: batch.id,
         title,
         start_time: serverStartTime,
         end_time: serverEndTime,
@@ -89,15 +90,16 @@ function ScheduleCard() {
         close();
       }
     } else {
+      // saving the schedule
       const data = await schedulesApi.create({
-        batch_id: 1,
+        batch_id: batch.id,
         title,
         start_time: serverStartTime,
         end_time: serverEndTime,
         duration: serverDuration,
       });
 
-      // console.log(data);
+      console.log(data);
       if (data.entry) {
         setLoadedSchedules((prevSchedules) => [...prevSchedules, data.entry]);
         close();
@@ -152,9 +154,10 @@ function ScheduleCard() {
       <div className={styles.batch}>
         <p className={styles.text}>Batch: </p>
         <DropDown
-          options={loadedBatches.map((batch) => batch.name)}
+          options={loadedBatches}
           setOption={setBatch}
           selectedOption={batch}
+          methodBeforeDisplay={(batch) => batch.name}
         />
       </div>
     </CommonInputCard>

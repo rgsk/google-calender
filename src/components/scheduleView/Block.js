@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import styles from './Block.module.scss';
 import Description from './Description';
 function Block({

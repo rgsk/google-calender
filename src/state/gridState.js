@@ -182,7 +182,8 @@ export const useGridState = () => {
         });
       }
     }
-  }, [currentMonth, currentYear, layoutType, months, setDimension, setLayout]);
+    // extra update on year change
+  }, [currentMonth, currentYear, layoutType, months]);
   const prevPage = () => {
     if (layoutType === layoutTypes.month) {
       prevMonth();

@@ -1,8 +1,8 @@
 import styles from './TeacherCard.module.scss';
-import CommonInputCard from '../shared/CommonInputCard';
+import CommonInputCard from './CommonInputCard';
 import { useState } from 'react';
-import { useEditState } from '../state/editState';
-import teachersApi from '../api/teachersApi';
+import { useEditState } from '../../state/editState';
+import teachersApi from '../../api/teachersApi';
 
 function TeacherCard() {
   const [name, setName] = useState('');

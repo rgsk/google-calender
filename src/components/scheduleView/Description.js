@@ -1,9 +1,12 @@
 import styles from './Description.module.scss';
-import MaterialIcon from '../shared/MaterialIcon';
-import { getDayAndDate, getTime12HourWithMinutes } from '../helpers/dateHelper';
-import schedulesApi from '../api/schedulesApi';
-import { useInfoState } from '../state/infoState';
-import { useEditState } from '../state/editState';
+import MaterialIcon from './../buttons/MaterialIcon';
+import {
+  getDayAndDate,
+  getTime12HourWithMinutes,
+} from '../../helpers/dateHelper';
+import schedulesApi from '../../api/schedulesApi';
+import { useInfoState } from '../../state/infoState';
+import { useEditState } from '../../state/editState';
 function Description({
   schedules = [],
   vertical,
