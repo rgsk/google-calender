@@ -21,8 +21,9 @@ const getTime = (date) => {
 function ScheduleCard() {
   const { editStartTime, editEndTime, editedSchedule, setEditingSchedule } =
     useEditState();
-  const { setLoadedSchedules, loadedBatches } = useInfoState();
+  const { setLoadedSchedules, loadedBatches, loadedTeachers } = useInfoState();
   const [batch, setBatch] = useState(loadedBatches[0]);
+  const [teacher, setTeacher] = useState(loadedTeachers[0]);
   const [title, setTitle] = useState(() => {
     if (editedSchedule) {
       return editedSchedule.title;
@@ -152,12 +153,26 @@ function ScheduleCard() {
         </div>
       </div>
       <div className={styles.batch}>
-        <p className={styles.text}>Batch: </p>
+        <p className={styles.text}>Batch : </p>
         <DropDown
           options={loadedBatches}
           setOption={setBatch}
           selectedOption={batch}
           methodBeforeDisplay={(batch) => batch.name}
+        />
+      </div>
+      <div className={styles.teacher}>
+        <p className={styles.text}>Teacher : </p>
+        <DropDown
+          options={loadedTeachers}
+          setOption={setTeacher}
+          selectedOption={teacher}
+          methodBeforeDisplay={(teacher) => teacher.name}
+          type="text"
+          optionsStyle={{
+            maxHeight: `200px`,
+            transform: `translateX(150px)`,
+          }}
         />
       </div>
     </CommonInputCard>

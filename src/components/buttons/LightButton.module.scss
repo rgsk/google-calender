@@ -6,7 +6,8 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &.hovered {
     background-color: var(--color-light-gray-hover);
   }
 }

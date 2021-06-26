@@ -24,11 +24,22 @@
     align-items: center;
   }
 }
+.text {
+  font-size: 1.3rem;
+}
 .batch {
   display: flex;
   gap: 10px;
   align-items: center;
-  .text {
-    font-size: 1.3rem;
+}
+.teacher {
+  margin: 1rem 0;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  input {
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--color-blue) !important;
+    width: 100%;
   }
 }

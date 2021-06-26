@@ -14,9 +14,11 @@ import schedulesApi from '../api/schedulesApi';
 import { useEditState } from '../state/editState';
 import { useSwipeable } from 'react-swipeable';
 import batchesApi from '../api/batchesApi';
+import teachersApi from '../api/teachersApi';
 function Home() {
   const { layoutType, layoutTypes, nextPage, prevPage } = useGridState();
-  const { setLoadedSchedules, setLoadedBatches } = useInfoState();
+  const { setLoadedSchedules, setLoadedBatches, setLoadedTeachers } =
+    useInfoState();
   const { editingSchedule, editingTeacher, editingBatch } = useEditState();
 
   useEffect(() => {
@@ -30,8 +32,13 @@ function Home() {
       if (fetchedBatches.length) {
         setLoadedBatches(fetchedBatches);
       }
+      const fetchedTeachers = await teachersApi.getMultiple();
+      if (fetchedTeachers.length) {
+        // console.log(fetchedTeachers);
+        setLoadedTeachers(fetchedTeachers);
+      }
     })();
-  }, []);
+  }, [setLoadedBatches, setLoadedSchedules]);
   const handlers = useSwipeable({
     onSwipedLeft: (e) => {
       // console.log(e);

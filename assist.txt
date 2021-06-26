@@ -1,0 +1,3 @@
+https://crud-rest-pep.herokuapp.com
+http://localhost:5000
+http://192.168.43.184:5000

@@ -1,7 +1,10 @@
 import styles from './LightButton.module.scss';
-function LightButton({ children, onClick }) {
+function LightButton({ children, onClick, hovered }) {
   return (
-    <span className={styles.lightButton} onClick={onClick}>
+    <span
+      className={[styles.lightButton, hovered ? styles.hovered : ''].join(' ')}
+      onClick={onClick}
+    >
       {children}
     </span>
   );

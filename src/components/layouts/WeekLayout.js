@@ -9,6 +9,7 @@ import { percent, range, objectsAreSame } from '../../helpers/utils';
 import GridLayout from 'react-grid-layout';
 import Block from '../scheduleView/Block';
 import schedulesApi from '../../api/schedulesApi';
+import { isMobile } from 'react-device-detect';
 import {
   addDuration,
   getDateTimeForServer,
@@ -226,7 +227,8 @@ function WeekLayout() {
             width={percent(window.innerWidth, 89)}
             onResizeStop={handleChangesInLayout}
             onDragStop={handleChangesInLayout}
-            isResizable={true}
+            isResizable={!isMobile}
+            isDraggable={!isMobile}
             resizeHandles={['s']}
           >
             {range(0, dimension.rows * dimension.cols).map((v) => (
