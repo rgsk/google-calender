@@ -42,8 +42,8 @@ function CalenderLayout() {
         <Description
           schedules={selectedSchedules}
           style={{
-            transform: `translate(${mousePosition.x}px, ${
-              mousePosition.y - 65
+            transform: `translate(${mousePosition.x + 30}px, ${
+              mousePosition.y - 120
             }px)`,
           }}
           close={() => setSelectedSchedules([])}

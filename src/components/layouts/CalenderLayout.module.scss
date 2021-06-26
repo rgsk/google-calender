@@ -3,4 +3,13 @@
   margin-top: 1rem;
   // width: 80vw;
   // border: 10px solid red;
+  color: white;
+  // to remove that annoying 0
+  & > div {
+    overflow: visible;
+    // calender was not scrolling properly
+    // that's why overflow-x changed
+    color: black;
+    // text color
+  }
 }

@@ -73,6 +73,7 @@ function Navbar() {
             options={Object.keys(layoutTypes)}
             setOption={setLayoutType}
             selectedOption={layoutType}
+            // maxOptionsToShow={3}
           />
         </div>
       </div>

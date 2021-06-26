@@ -9,6 +9,7 @@ function DropDown({
   methodBeforeDisplay = (val) => val,
   optionsStyle = {},
   type = 'dropDown',
+  maxOptionsToShow = options.length,
 }) {
   const [dropDownActive, setDropdownActive] = useState(false);
   const [textInput, setTextInput] = useState('');
@@ -122,7 +123,7 @@ function DropDown({
             type="text"
             value={textInput}
             onKeyDown={(e) => {
-              if (e.key === 'ArrowDown') {
+              if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 if (!dropDownActive) {
                   e.preventDefault();
                   setDropdownActive(true);
@@ -146,24 +147,27 @@ function DropDown({
       )}
       {dropDownActive && (
         <div className={styles.options} style={optionsStyle} ref={optionsRef}>
-          {sortedOptions.map((option, i) => (
-            <p
-              key={i}
-              className={[
-                styles.option,
-                hoveredIdx === i ? styles.hovered : '',
-              ].join(' ')}
-              onClick={(e) => {
-                // console.log('option clicked');
-                e.stopPropagation();
-                setTextInput(methodBeforeDisplay(option));
-                setDropdownActive(false);
-                setOption(option);
-              }}
-            >
-              {methodBeforeDisplay(option)}
-            </p>
-          ))}
+          {sortedOptions.map(
+            (option, i) =>
+              i < maxOptionsToShow && (
+                <p
+                  key={i}
+                  className={[
+                    styles.option,
+                    hoveredIdx === i ? styles.hovered : '',
+                  ].join(' ')}
+                  onClick={(e) => {
+                    // console.log('option clicked');
+                    e.stopPropagation();
+                    setTextInput(methodBeforeDisplay(option));
+                    setDropdownActive(false);
+                    setOption(option);
+                  }}
+                >
+                  {methodBeforeDisplay(option)}
+                </p>
+              )
+          )}
         </div>
       )}
     </div>
