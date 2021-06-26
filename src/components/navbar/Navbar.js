@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { monthNames } from '../../helpers/names';
 import LightButton from '../buttons/LightButton';
 import MaterialIcon from '../buttons/MaterialIcon';
@@ -31,6 +32,17 @@ function Navbar() {
       : layoutType === layoutTypes.day
       ? weeks[currentWeek][0].getDate() + ' ' + weekString
       : weekString;
+  const monthDetails = (
+    <div className={styles.monthDetails}>
+      {!isMobile && (
+        <div className={styles.controls}>
+          <MaterialIcon type="navigate_before" onClick={prevPage} />
+          <MaterialIcon type="navigate_next" onClick={nextPage} />
+        </div>
+      )}
+      <p className={styles.dateString}>{dateString}</p>
+    </div>
+  );
   return (
     <div>
       <div className={styles.desktopNavbar}>
@@ -52,11 +64,7 @@ function Navbar() {
           <div className={styles.spacer}></div>
 
           <LightButton onClick={switchToCurrentDate}>Today</LightButton>
-          <div className={styles.monthDetails}>
-            <MaterialIcon type="navigate_before" onClick={prevPage} />
-            <MaterialIcon type="navigate_next" onClick={nextPage} />
-            <p className={styles.dateString}>{dateString}</p>
-          </div>
+          {monthDetails}
           <div className={styles.spacer}></div>
           <MaterialIcon type="search" />
           <MaterialIcon type="help_outline" />
@@ -78,10 +86,12 @@ function Navbar() {
           menu
         </span>
 
-        <p className={styles.dateString}>{dateString}</p>
+        {monthDetails}
         <div className={styles.spacer}></div>
         <span className="material-icons-outlined">search</span>
-        <span className="material-icons-outlined">calendar_today</span>
+        <span className="material-icons-outlined" onClick={switchToCurrentDate}>
+          calendar_today
+        </span>
         <span className="material-icons-outlined">more_vert</span>
         <SideModal show={showSideModal} close={() => setShowSideModal(false)}>
           <div className={styles.modalContent}>

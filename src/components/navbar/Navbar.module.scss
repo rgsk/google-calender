@@ -1,6 +1,3 @@
-.spacer {
-  flex: 1;
-}
 .desktopNavbar,
 .mobileNavbar {
   z-index: 100;
@@ -14,9 +11,28 @@
   display: flex;
   align-items: center;
   padding: 0 1rem;
+  .spacer {
+    flex: 1;
+  }
+  .monthDetails {
+    display: flex;
+
+    align-items: center;
+    // border: 1px solid blue;
+    .controls {
+      display: flex;
+      align-items: center;
+      margin-right: 2rem;
+    }
+    .dateString {
+      width: max-content;
+      // border: 1px solid red;
+      font-size: 1.1rem;
+    }
+  }
 }
 .desktopNavbar {
-  @media (max-width: 900px) {
+  @media (max-width: 1000px) {
     display: none;
   }
 
@@ -35,26 +51,17 @@
   .rest {
     padding: 0 3rem;
     gap: 20px;
+    @media (max-width: 1200px) {
+      gap: 10px;
+    }
     flex: 1;
+    display: flex;
     align-items: center;
     // border: 1px solid red;
-    display: flex;
-    .monthDetails {
-      display: flex;
-
-      align-items: center;
-      // border: 1px solid blue;
-      .dateString {
-        margin-left: 2rem;
-        width: 200px;
-        // border: 1px solid red;
-        font-size: 1.1rem;
-      }
-    }
   }
 }
 .mobileNavbar {
-  @media (min-width: 901px) {
+  @media (min-width: 1001px) {
     display: none;
   }
   gap: 20px;
