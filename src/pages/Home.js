@@ -12,10 +12,10 @@ import WeekLayout from '../components/layouts/WeekLayout';
 import Create from '../components/buttons/Create';
 import schedulesApi from '../api/schedulesApi';
 import { useEditState } from '../state/editState';
-
+import { useSwipeable } from 'react-swipeable';
 import batchesApi from '../api/batchesApi';
 function Home() {
-  const { layoutType, layoutTypes } = useGridState();
+  const { layoutType, layoutTypes, nextPage, prevPage } = useGridState();
   const { setLoadedSchedules, setLoadedBatches } = useInfoState();
   const { editingSchedule, editingTeacher, editingBatch } = useEditState();
 
@@ -32,7 +32,17 @@ function Home() {
       }
     })();
   }, []);
-
+  const handlers = useSwipeable({
+    onSwipedLeft: (e) => {
+      // console.log(e);
+      prevPage();
+    },
+    onSwipedRight: (e) => {
+      // console.log(e);
+      nextPage();
+    },
+    // trackMouse: true,
+  });
   return (
     <div className={styles.home}>
       <Create />
@@ -43,14 +53,15 @@ function Home() {
       ) : editingTeacher ? (
         <TeacherCard />
       ) : null}
-
-      {layoutType === layoutTypes.year ? (
-        <CalenderLayout />
-      ) : layoutType === layoutTypes.month ? (
-        <MonthLayout />
-      ) : (
-        <WeekLayout />
-      )}
+      <div className={styles.layout} {...handlers}>
+        {layoutType === layoutTypes.year ? (
+          <CalenderLayout />
+        ) : layoutType === layoutTypes.month ? (
+          <MonthLayout />
+        ) : (
+          <WeekLayout />
+        )}
+      </div>
     </div>
   );
 }

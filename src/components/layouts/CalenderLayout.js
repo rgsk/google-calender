@@ -1,9 +1,11 @@
+/* eslint-disable react/style-prop-object */
 import Calendar from 'rc-year-calendar';
 import { useState } from 'react';
 import Description from '../scheduleView/Description';
 import { useEditState } from '../../state/editState';
 import { useInfoState } from '../../state/infoState';
 import { useDateState } from '../../state/dateState';
+
 import styles from './CalenderLayout.module.scss';
 function CalenderLayout() {
   const {

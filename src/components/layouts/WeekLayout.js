@@ -4,14 +4,13 @@ import { useInfoState } from '../../state/infoState';
 import { useDateState } from '../../state/dateState';
 import { useGridState } from '../../state/gridState';
 import { useState, useEffect } from 'react';
-import { dayNames, monthNames } from '../../helpers/names';
+import { dayNames } from '../../helpers/names';
 import { percent, range, objectsAreSame } from '../../helpers/utils';
 import GridLayout from 'react-grid-layout';
 import Block from '../scheduleView/Block';
 import schedulesApi from '../../api/schedulesApi';
 import {
   addDuration,
-  constructDateForKeysWithISOFormat,
   getDateTimeForServer,
   getTime12Hour,
 } from '../../helpers/dateHelper';
@@ -129,8 +128,8 @@ function WeekLayout() {
         updatedTimes.startTime,
         schedule.duration
       );
+
       schedulesApi.update(schedule.id, {
-        ...schedule,
         start_time: getDateTimeForServer(updatedStartTime),
         end_time: getDateTimeForServer(updatedEndtime),
       });
@@ -254,6 +253,7 @@ function WeekLayout() {
                   index={v}
                   showScheduleDescription={showScheduleDescription[v]}
                   close={() => setShowScheduleDescription({})}
+                  draggable
                 />
               </div>
             ))}

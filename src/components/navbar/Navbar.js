@@ -7,6 +7,7 @@ import { useEditState } from '../../state/editState';
 import { useGridState } from '../../state/gridState';
 import styles from './Navbar.module.scss';
 import DropDown from '../shared/DropDown';
+import { CSSTransition } from 'react-transition-group';
 function Navbar() {
   const { weekString, currentMonth, currentYear, weeks, currentWeek } =
     useDateState();

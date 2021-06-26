@@ -1,4 +1,7 @@
 .home {
-  position: relative;
   padding-top: 2rem;
+  .layout {
+    // border: 2px solid red;
+    user-select: none;
+  }
 }

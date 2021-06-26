@@ -6,6 +6,7 @@ function Block({
   showScheduleDescription,
   height = 95,
   close = () => {},
+  draggable = false,
 }) {
   // console.log(showScheduleDescription);
   return (
@@ -22,6 +23,7 @@ function Block({
       <div
         style={{
           height: `${height}%`,
+          cursor: schedules.length && draggable ? 'move' : 'inherit',
         }}
         className={[
           styles.block,

@@ -6,6 +6,7 @@ import {
   getWeekIndexFromDate,
   getMonths,
 } from '../helpers/dateHelper';
+import { Debounce } from '../helpers/utils';
 export const layoutTypes = {
   day: 'day',
   week: 'week',
@@ -56,10 +57,15 @@ const dimensionState = atom({
     rowLength: 100,
   },
 });
+const windowResizedState = atom({
+  key: 'windowResizedState',
+  default: true,
+});
 export const useGridState = () => {
   const [layout, setLayout] = useRecoilState(layoutState);
   const [layoutType, setLayoutType] = useRecoilState(layoutTypeState);
   const [dimension, setDimension] = useRecoilState(dimensionState);
+  const [windowResized, setWindowResized] = useRecoilState(windowResizedState);
   const {
     currentYear,
     weeks,
@@ -102,6 +108,16 @@ export const useGridState = () => {
       default:
     }
   };
+  useEffect(() => {
+    const callback = new Debounce(() => {
+      // console.log('layout shifted');
+      setWindowResized((prev) => !prev);
+    }, 500);
+    window.addEventListener('resize', () => {
+      // console.log('resize');
+      callback.call();
+    });
+  }, []);
   useEffect(() => {
     let updatedWeeks;
     switch (layoutType) {
@@ -160,7 +176,7 @@ export const useGridState = () => {
         break;
       default:
     }
-  }, [layoutType]);
+  }, [layoutType, windowResized]);
   useEffect(() => {
     if (layoutType === layoutTypes['month']) {
       if (months[currentMonth].length === 35) {

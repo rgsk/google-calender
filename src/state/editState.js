@@ -39,6 +39,13 @@ export const useEditState = () => {
   return {
     editingSchedule,
     setEditingSchedule: (value) => {
+      // this is done so that other 2 cards are closed
+      // before opening new card
+
+      // note with this pattern make sure you don't use
+      // setEditingSchedule using the previous value
+      // eg setEditingSchedule(prev => !prev)
+
       if (value) {
         setEditingBatch(false);
         setEditingTeacher(false);
@@ -46,9 +53,21 @@ export const useEditState = () => {
       setEditingSchedule(value);
     },
     editingBatch,
-    setEditingBatch,
+    setEditingBatch: (value) => {
+      if (value) {
+        setEditingSchedule(false);
+        setEditingTeacher(false);
+      }
+      setEditingBatch(value);
+    },
     editingTeacher,
-    setEditingTeacher,
+    setEditingTeacher: (value) => {
+      if (value) {
+        setEditingSchedule(false);
+        setEditingBatch(false);
+      }
+      setEditingTeacher(value);
+    },
     editStartTime,
     setEditStartTIme,
     editEndTime,

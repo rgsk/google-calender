@@ -32,7 +32,7 @@ const commonApi = (tableName) => ({
   },
   update: async (id, entity) => {
     const response = await fetch(`http://localhost:5000/${tableName}/${id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'content-type': 'application/json',
       },
