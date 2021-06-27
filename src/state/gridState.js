@@ -45,7 +45,7 @@ const createLayout = (rows, cols) => {
 };
 const layoutTypeState = atom({
   key: 'layoutTypeState',
-  default: layoutTypes['week'],
+  default: layoutTypes['schedule'],
 });
 const layoutState = atom({
   key: 'layoutState',

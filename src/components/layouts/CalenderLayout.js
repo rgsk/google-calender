@@ -1,5 +1,5 @@
 /* eslint-disable react/style-prop-object */
-import Calendar from 'rc-year-calendar';
+import YearCalendar from 'rc-year-calendar';
 import { useEffect, useState } from 'react';
 import Description from '../scheduleView/Description';
 import { useEditState } from '../../state/editState';
@@ -54,7 +54,7 @@ function CalenderLayout() {
           close={() => setSelectedSchedules([])}
         />
       )}
-      <Calendar
+      <YearCalendar
         minDate={new Date(2015)}
         style="background"
         onDayClick={({ date, events }) => {

@@ -27,7 +27,7 @@ function Navbar() {
   const dateString =
     layoutType === layoutTypes.month
       ? monthNames[currentMonth] + ' ' + currentYear
-      : layoutType === layoutTypes.year
+      : layoutType === layoutTypes.year || layoutType === layoutTypes.schedule
       ? currentYear
       : layoutType === layoutTypes.day
       ? weeks[currentWeek][0].getDate() + ' ' + weekString

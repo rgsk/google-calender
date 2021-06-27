@@ -1,0 +1,12 @@
+.scheduleLayout {
+  display: flex;
+  border: 1px solid pink;
+  justify-content: flex-start;
+  .calender {
+    border: 1px solid red;
+    width: 300px;
+  }
+  .schedules {
+    border: 1px solid blue;
+  }
+}

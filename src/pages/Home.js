@@ -15,6 +15,7 @@ import { useEditState } from '../state/editState';
 import { useSwipeable } from 'react-swipeable';
 import batchesApi from '../api/batchesApi';
 import teachersApi from '../api/teachersApi';
+import ScheduleLayout from '../components/layouts/ScheduleLayout';
 function Home() {
   const { layoutType, layoutTypes, nextPage, prevPage } = useGridState();
   const { setLoadedSchedules, setLoadedBatches, setLoadedTeachers } =
@@ -65,6 +66,8 @@ function Home() {
           <CalenderLayout />
         ) : layoutType === layoutTypes.month ? (
           <MonthLayout />
+        ) : layoutType === layoutTypes.schedule ? (
+          <ScheduleLayout />
         ) : (
           <WeekLayout />
         )}
