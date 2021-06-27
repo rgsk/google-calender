@@ -1,16 +1,32 @@
-import { percent, range } from '../helpers/utils';
-
+import { useState } from 'react';
 import styles from './First.module.scss';
 function First() {
+  const [showLine, setShowLine] = useState(false);
+  const [runHideAnimation, setRunHideAnimation] = useState(false);
   return (
     <div className={styles.container}>
-      <span class="material-icons">pie_chart</span>
-
-      <div className={styles.grid}>
-        {range(0, 167).map((v) => (
-          <p key={v}>gdf</p>
-        ))}
-      </div>
+      <button
+        onClick={() => {
+          if (showLine === false) {
+            setShowLine(true);
+          } else {
+            setRunHideAnimation(true);
+            setTimeout(() => {
+              setShowLine(false);
+              setRunHideAnimation(false);
+            }, 300);
+          }
+        }}
+      >
+        show
+      </button>
+      {showLine && (
+        <div
+          className={[styles.line, runHideAnimation ? styles.hide : ''].join(
+            ' '
+          )}
+        ></div>
+      )}
     </div>
   );
 }

@@ -3,7 +3,6 @@
     font-size: 1.5rem;
     width: 100%;
   }
-  border-bottom: 2px solid var(--color-blue);
 }
 // border: 1px solid red;
 
@@ -39,7 +38,19 @@
   align-items: baseline;
   input {
     font-size: 1.2rem;
-    border-bottom: 1px solid var(--color-blue) !important;
     width: 100%;
+  }
+}
+.description {
+  .textArea {
+    resize: none;
+    outline: none;
+    border: none;
+    background-color: var(--color-bg-purple);
+    width: 100%;
+    font-family: inherit;
+    border-radius: 6px;
+
+    padding: 0.5rem;
   }
 }

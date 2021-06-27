@@ -16,6 +16,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-swipeable": "^6.1.2",
+    "react-textarea-autosize": "^8.3.3",
     "react-time-picker-input": "^1.6.29",
     "react-transition-group": "^4.4.2",
     "recoil": "^0.3.1",

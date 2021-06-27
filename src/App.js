@@ -3,6 +3,7 @@ import styles from './App.module.scss';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import First from './pages/First';
+import Second from './pages/Second';
 import Navbar from './components/navbar/Navbar';
 function App() {
   useEffect(() => {
@@ -24,6 +25,9 @@ function App() {
             </Route>
             <Route path="/first">
               <First />
+            </Route>
+            <Route path="/second">
+              <Second />
             </Route>
           </Switch>
         </div>

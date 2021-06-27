@@ -2,6 +2,7 @@ import styles from './DropDown.module.scss';
 import { useEffect, useState, useRef } from 'react';
 import LightButton from '../buttons/LightButton';
 import { largestCommonCharacters } from '../../helpers/utils';
+import InputWithLine from './InputWithLine';
 function DropDown({
   options,
   setOption,
@@ -10,6 +11,7 @@ function DropDown({
   optionsStyle = {},
   type = 'dropDown',
   maxOptionsToShow = options.length,
+  addLineBelowInput = false,
 }) {
   const [dropDownActive, setDropdownActive] = useState(false);
   const [textInput, setTextInput] = useState('');
@@ -91,7 +93,35 @@ function DropDown({
       setSortedOptions(arr.map((v) => v[0]));
     }
   }, [textInput]);
-
+  const inputComponent = (handlers = {}) => {
+    return (
+      <input
+        type="text"
+        value={textInput}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            if (!dropDownActive) {
+              e.preventDefault();
+              setDropdownActive(true);
+              setHoveredIdx(0);
+              e.stopPropagation();
+            }
+          }
+        }}
+        onChange={(e) => {
+          setTextInput(e.target.value);
+          setDropdownActive(true);
+          setHoveredIdx(0);
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          // console.log('clicked');
+          setDropdownActive(true);
+        }}
+        {...handlers}
+      ></input>
+    );
+  };
   return (
     <div className={styles.container}>
       {type === 'dropDown' ? (
@@ -119,30 +149,11 @@ function DropDown({
         </LightButton>
       ) : (
         <div className={styles.textInput}>
-          <input
-            type="text"
-            value={textInput}
-            onKeyDown={(e) => {
-              if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                if (!dropDownActive) {
-                  e.preventDefault();
-                  setDropdownActive(true);
-                  setHoveredIdx(0);
-                  e.stopPropagation();
-                }
-              }
-            }}
-            onChange={(e) => {
-              setTextInput(e.target.value);
-              setDropdownActive(true);
-              setHoveredIdx(0);
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              // console.log('clicked');
-              setDropdownActive(true);
-            }}
-          ></input>
+          {addLineBelowInput ? (
+            <InputWithLine component={(handlers) => inputComponent(handlers)} />
+          ) : (
+            inputComponent()
+          )}
         </div>
       )}
       {dropDownActive && (

@@ -1,12 +1,19 @@
 .container {
-  .grid {
-    display: grid;
-    background-color: black;
-    gap: 1px;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(24, 100px);
-    p {
-      background-color: wheat;
+  margin-top: 200px;
+  .line {
+    margin: auto;
+    width: 0px;
+    height: 2px;
+    background-color: red;
+    animation: expand 300ms ease forwards;
+    @keyframes expand {
+      to {
+        width: 100%;
+      }
+    }
+    &.hide {
+      opacity: 0;
+      transition: all 300ms ease-in;
     }
   }
 }

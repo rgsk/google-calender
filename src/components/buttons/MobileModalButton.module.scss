@@ -10,6 +10,6 @@
   font-weight: 500;
   &.active {
     color: var(--color-blue);
-    background-color: rgba(25, 110, 220, 0.171);
+    background-color: var(--color-bg-blue);
   }
 }

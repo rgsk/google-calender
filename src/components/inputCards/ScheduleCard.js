@@ -9,6 +9,8 @@ import { getDateForServer, getDuration } from '../../helpers/dateHelper';
 import CommonInputCard from './CommonInputCard';
 import DropDown from '../shared/DropDown';
 
+import TextareaAutosize from 'react-textarea-autosize';
+import InputWithLine from '../shared/InputWithLine';
 const getTime = (date) => {
   // for timepicker to work properly
   // we need to time string formatted as 12:32
@@ -23,7 +25,7 @@ function ScheduleCard() {
     useEditState();
   const { setLoadedSchedules, loadedBatches, loadedTeachers } = useInfoState();
   const [batch, setBatch] = useState(loadedBatches[0]);
-  const [teacher, setTeacher] = useState(loadedTeachers[0]);
+  const [teacher, setTeacher] = useState();
   const [title, setTitle] = useState(() => {
     if (editedSchedule) {
       return editedSchedule.title;
@@ -112,11 +114,16 @@ function ScheduleCard() {
   return (
     <CommonInputCard save={save} close={close}>
       <div className={styles.title}>
-        <input
-          type="text"
-          placeholder="Add title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+        <InputWithLine
+          component={(handlers) => (
+            <input
+              type="text"
+              placeholder="Add title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              {...handlers}
+            />
+          )}
         />
       </div>
       <div className={styles.dateTime}>
@@ -154,24 +161,49 @@ function ScheduleCard() {
       </div>
       <div className={styles.batch}>
         <p className={styles.text}>Batch : </p>
-        <DropDown
-          options={loadedBatches}
-          setOption={setBatch}
-          selectedOption={batch}
-          methodBeforeDisplay={(batch) => batch.name}
-        />
+        {loadedBatches.length && (
+          <DropDown
+            options={loadedBatches}
+            setOption={setBatch}
+            selectedOption={batch}
+            methodBeforeDisplay={(batch) => batch?.name}
+            optionsStyle={{
+              maxHeight: `200px`,
+              transform: `translateX(10px)`,
+            }}
+          />
+        )}
       </div>
       <div className={styles.teacher}>
         <p className={styles.text}>Teacher : </p>
-        <DropDown
-          options={loadedTeachers}
-          setOption={setTeacher}
-          selectedOption={teacher}
-          methodBeforeDisplay={(teacher) => teacher.name}
-          type="text"
-          optionsStyle={{
-            maxHeight: `200px`,
-            transform: `translateX(150px)`,
+        {loadedTeachers.length && (
+          <DropDown
+            options={loadedTeachers}
+            setOption={setTeacher}
+            selectedOption={teacher}
+            methodBeforeDisplay={(teacher) => teacher?.name}
+            type="text"
+            optionsStyle={{
+              maxHeight: `200px`,
+              transform: `translateX(100px)`,
+            }}
+            addLineBelowInput
+          />
+        )}
+      </div>
+      <div className={styles.description}>
+        <p className={styles.text}>Description : </p>
+        <InputWithLine
+          component={(handlers) => (
+            <TextareaAutosize
+              className={styles.textArea}
+              minRows={4}
+              {...handlers}
+            />
+          )}
+          lineStyles={{
+            width: `calc(100% - 6px)`,
+            transform: 'translateY(-7px)',
           }}
         />
       </div>

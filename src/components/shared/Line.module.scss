@@ -1,0 +1,26 @@
+.dummyLine {
+  height: 2px;
+  margin: auto;
+  width: 100%;
+  background-color: var(--color-light-gray-hover);
+  position: relative;
+  overflow: hidden;
+  .line {
+    position: absolute;
+    left: 50%;
+    width: 0%;
+    height: 100%;
+    background-color: var(--color-blue);
+    animation: expand 300ms ease forwards;
+    @keyframes expand {
+      to {
+        width: 100%;
+        left: 0%;
+      }
+    }
+    &.hide {
+      opacity: 0;
+      transition: all 300ms ease;
+    }
+  }
+}
