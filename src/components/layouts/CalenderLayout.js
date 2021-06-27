@@ -60,10 +60,15 @@ function CalenderLayout() {
         onDayClick={({ date, events }) => {
           // console.log(date);
           // console.log(events);
+
           if (events.length) {
             setSelectedSchedules([]);
             setSelectedSchedules(events.map((event) => event.schedule));
           } else {
+            // since window click handler is not listening on day click
+            // so we need to close
+            // opened schedule first
+            setSelectedSchedules([]);
             itemClickListener(date);
           }
         }}

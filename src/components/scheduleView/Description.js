@@ -4,6 +4,7 @@ import {
   getDayAndDate,
   getTime12HourWithMinutes,
 } from '../../helpers/dateHelper';
+import { percent } from '../../helpers/utils';
 import schedulesApi from '../../api/schedulesApi';
 import { useInfoState } from '../../state/infoState';
 import { useEditState } from '../../state/editState';
@@ -35,12 +36,26 @@ function Description({
     const descriptionBox = descriptionRef.current.getBoundingClientRect();
     // console.log(descriptionBox);
     // console.log(window.innerHeight);
+
+    // description fits inside of current screen
     if (descriptionBox.right > window.innerWidth) {
       if (style.left) {
-        descriptionRef.current.style.transform = `translateX(-120%)`;
+        if (descriptionBox.left > percent(descriptionBox.width, 120)) {
+          descriptionRef.current.style.transform = `translateX(-120%)`;
+        } else {
+          descriptionRef.current.style.transform = `translateX(-${
+            descriptionBox.right + 30 - window.innerWidth
+          }px)`;
+        }
       } else {
-        descriptionRef.current.style.transform = `translateX(-100%)`;
-        descriptionRef.current.style.left = '0%';
+        if (descriptionBox.left > descriptionBox.width) {
+          descriptionRef.current.style.transform = `translateX(-100%)`;
+          descriptionRef.current.style.left = '0%';
+        } else {
+          descriptionRef.current.style.transform = `translateX(-${
+            descriptionBox.right - window.innerWidth
+          }px)`;
+        }
       }
     }
     if (descriptionBox.bottom > window.innerHeight) {
