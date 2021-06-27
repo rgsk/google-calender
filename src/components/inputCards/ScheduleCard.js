@@ -24,8 +24,31 @@ function ScheduleCard() {
   const { editStartTime, editEndTime, editedSchedule, setEditingSchedule } =
     useEditState();
   const { setLoadedSchedules, loadedBatches, loadedTeachers } = useInfoState();
-  const [batch, setBatch] = useState(loadedBatches[0]);
-  const [teacher, setTeacher] = useState();
+  const [batch, setBatch] = useState(() => {
+    if (editedSchedule) {
+      return loadedBatches.find(
+        (batch) => batch.id === editedSchedule.batch_id
+      );
+    } else {
+      return loadedBatches[0];
+    }
+  });
+  const [teacher, setTeacher] = useState(() => {
+    if (editedSchedule) {
+      // console.log(editedSchedule);
+      const teacher_id = editedSchedule.teachers_id[0];
+      return loadedTeachers.find((teacher) => teacher.id === teacher_id);
+    } else {
+      return null;
+    }
+  });
+  const [description, setDescription] = useState(() => {
+    if (editedSchedule) {
+      return editedSchedule.description;
+    } else {
+      return '';
+    }
+  });
   const [title, setTitle] = useState(() => {
     if (editedSchedule) {
       return editedSchedule.title;
@@ -74,6 +97,7 @@ function ScheduleCard() {
       // updating the schedule
       const data = await schedulesApi.update(editedSchedule.id, {
         batch_id: batch.id,
+        teachers_id: teacher ? [teacher.id] : [],
         title,
         start_time: serverStartTime,
         end_time: serverEndTime,
@@ -94,15 +118,19 @@ function ScheduleCard() {
       }
     } else {
       // saving the schedule
-      const data = await schedulesApi.create({
+      const scheduleToCreate = {
         batch_id: batch.id,
+        teachers_id: teacher ? [teacher.id] : [],
         title,
+        description,
         start_time: serverStartTime,
         end_time: serverEndTime,
         duration: serverDuration,
-      });
+      };
+      // console.log(scheduleToCreate);
+      const data = await schedulesApi.create({ ...scheduleToCreate });
 
-      console.log(data);
+      // console.log(data);
       if (data.entry) {
         setLoadedSchedules((prevSchedules) => [...prevSchedules, data.entry]);
         close();
@@ -199,6 +227,8 @@ function ScheduleCard() {
               className={styles.textArea}
               minRows={4}
               {...handlers}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           )}
           lineStyles={{
