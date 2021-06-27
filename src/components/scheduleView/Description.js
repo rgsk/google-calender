@@ -7,6 +7,7 @@ import {
 import schedulesApi from '../../api/schedulesApi';
 import { useInfoState } from '../../state/infoState';
 import { useEditState } from '../../state/editState';
+import { useEffect, useRef } from 'react';
 function Description({
   schedules = [],
   vertical,
@@ -14,6 +15,7 @@ function Description({
   style = {},
   close = () => {},
 }) {
+  const descriptionRef = useRef();
   const { loadedSchedules, setLoadedSchedules } = useInfoState();
   const { setEditingSchedule, setEditedSchedule } = useEditState();
   // console.log(schedule);
@@ -29,8 +31,29 @@ function Description({
     setEditingSchedule(true);
     close();
   };
+  useEffect(() => {
+    const descriptionBox = descriptionRef.current.getBoundingClientRect();
+    // console.log(descriptionBox);
+    // console.log(window.innerHeight);
+    if (descriptionBox.right > window.innerWidth) {
+      if (style.left) {
+        descriptionRef.current.style.transform = `translateX(-120%)`;
+      } else {
+        descriptionRef.current.style.transform = `translateX(-100%)`;
+        descriptionRef.current.style.left = '0%';
+      }
+    }
+    if (descriptionBox.bottom > window.innerHeight) {
+      descriptionRef.current.style.transform =
+        descriptionRef.current.style.transform +
+        ' ' +
+        `translateY(-${descriptionBox.bottom - window.innerHeight}px)`;
+    }
+  }, []);
+
   return (
     <div
+      ref={descriptionRef}
       className={styles.description}
       style={{
         top: vertical === 't' ? '-100%' : vertical === 'b' ? '100%' : '0%',

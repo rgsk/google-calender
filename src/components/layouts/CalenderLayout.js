@@ -1,6 +1,6 @@
 /* eslint-disable react/style-prop-object */
 import Calendar from 'rc-year-calendar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Description from '../scheduleView/Description';
 import { useEditState } from '../../state/editState';
 import { useInfoState } from '../../state/infoState';
@@ -26,6 +26,12 @@ function CalenderLayout() {
   };
   const [selectedSchedules, setSelectedSchedules] = useState([]);
   const [mousePosition, setMousePosition] = useState();
+  useEffect(() => {
+    window.addEventListener('click', () => {
+      // console.log('clicked');
+      setSelectedSchedules([]);
+    });
+  }, []);
   return (
     <div
       onClickCapture={(e) => {
@@ -42,9 +48,8 @@ function CalenderLayout() {
         <Description
           schedules={selectedSchedules}
           style={{
-            transform: `translate(${mousePosition.x + 30}px, ${
-              mousePosition.y - 120
-            }px)`,
+            top: ` ${mousePosition.y - 120}px`,
+            left: `${mousePosition.x + 30}px`,
           }}
           close={() => setSelectedSchedules([])}
         />
@@ -56,6 +61,7 @@ function CalenderLayout() {
           // console.log(date);
           // console.log(events);
           if (events.length) {
+            setSelectedSchedules([]);
             setSelectedSchedules(events.map((event) => event.schedule));
           } else {
             itemClickListener(date);

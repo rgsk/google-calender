@@ -2,13 +2,18 @@
   //  relative brother wrapper
   position: absolute;
   z-index: 300;
+  transition: all 200ms ease;
   background-color: white;
   color: black;
-  width: 400px;
+  min-width: 400px;
+  max-width: 100vw;
   min-height: 150px;
+  max-height: calc(100vh - var(--measure-navbar-height) - 2rem - 100px);
+  // 100vh - var(--measure-navbar-height) - 2rem - 50px
+  // 2rem for home padding, 30px for column height
   box-shadow: var(--decor-box-shadow);
   border-radius: 6px;
-  overflow: hidden;
+  overflow-y: auto !important;
   padding: 0.5rem;
   .top {
     display: flex;

@@ -77,16 +77,16 @@ export const getNumDaysMonthWise = (year) => {
   ];
 };
 export function getWeekIndexFromDate(weeks, date) {
-  let len = weeks[0].length;
-  let i = 0;
-
-  while (date.getMonth() > weeks[i][len - 1].getMonth()) {
-    i++;
+  for (let i = 0; i < weeks.length; i++) {
+    const week = weeks[i];
+    for (let day of week) {
+      if (
+        date.getMonth() === day.getMonth() &&
+        date.getDate() === day.getDate()
+      )
+        return i;
+    }
   }
-  while (date.getDate() > weeks[i][len - 1].getDate()) {
-    i++;
-  }
-  return i;
 }
 export function getAssociatedMonthsAndYearForGivenWeek(week) {
   if (!week) return;
